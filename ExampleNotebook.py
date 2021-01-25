@@ -1,7 +1,7 @@
 # %%
 import numpy as np
 import analytical_equations as eqs
-from   MCMC_routines import MC_model
+from   MCMC_routines import MC_model,galaxy_template
 import emcee
 
 # %%
@@ -12,18 +12,15 @@ import emcee
    - <b> Sigma_OIII </b> (L$_{\odot}$/kpc$^2$)
 
 along with their relative errors
+stadandard assumed error is 20%
 """
 
-# %%
-Sigma_sfrgalaxy       = 2.  # Msun/yr/kpc^2
-SigmaCIIgalaxy        = 3e7 # Lsun/kpc^2
-SigmaOIIIgalaxy       = 7e7 # Lsun/kpc^2
-rel_err_SigmaCII      = 0.2 # relative error on the SigmaCII
-rel_err_SigmaOIII     = 0.2 # relative error on the SigmaOIII
-Deltagalaxy           = np.log10(SigmaCIIgalaxy) -np.log10(eqs.delooze_fit_resolved(Sigma_sfrgalaxy))
-rel_err_Delta         = 0.2 # relative error on the Delta
-
-print(f'Input: logDelta={Deltagalaxy}, logSigmaCII={np.log10(SigmaCIIgalaxy)}, logSigmaOIII={np.log10(SigmaOIIIgalaxy)}, logSigmaSFR={np.log10(Sigma_sfrgalaxy)}')
+galaxy_example = galaxy_template(
+                Sigma_SFR  = 2.0
+               ,Sigma_CII  = 3.0e+7
+               ,Sigma_OIII = 7.0e+7
+              )
+galaxy_example.print_info()
 
 # %%
 """
@@ -35,7 +32,11 @@ The ranges are bound between (lognMIN, lognMAX) (logZMIN, logZMAX), (logkMIN, lo
 
 """
 
-mcr = MC_model()
+mcr = MC_model(
+  lognMIN = 0.5, lognMAX= 3.5
+ ,logZMIN = -1.5, logZMAX= 0
+ ,logkMIN = -1, logkMAX= 2.5
+        )
 
 # %%
 # should you want to modify them, uncomment the following lines and set your preferred values
@@ -56,13 +57,13 @@ please have a look at the emcee documentation at https://emcee.readthedocs.io/en
 """
 
 # %%
-n_dim=3 
-n_walkers=10 
-steps=200
-burn_in=50
+n_dim               = 3 
+n_walkers           = 10 
+steps               = 200
+burn_in             = 50
 logn0, logZ0, logk0 = 2.0, -0.5, 0.3
-starting_point = [logn0, logZ0, logk0]
-pos = [starting_point + 1e-5*np.random.randn(n_dim) for i in range(n_walkers)]
+starting_point      = [logn0, logZ0, logk0]
+pos                 = [starting_point + 1e-5*np.random.randn(n_dim) for i in range(n_walkers)]
 
 # %%
 """
@@ -71,12 +72,12 @@ Further details on the possibile optimization of the MCMC algorithm and the outp
 """
 
 # %%
-y = np.array([Deltagalaxy,SigmaCIIgalaxy,SigmaOIIIgalaxy])
-yerr = np.array([Deltagalaxy*rel_err_Delta,SigmaCIIgalaxy*rel_err_SigmaCII,SigmaOIIIgalaxy*rel_err_SigmaOIII])
-            
-sampler = emcee.EnsembleSampler(n_walkers, n_dim, mcr.lnprob, args=(y, yerr, Sigma_sfrgalaxy))
+
+y, yerr, par = galaxy_example.data_for_MCMC()
+
+sampler      = emcee.EnsembleSampler(n_walkers, n_dim, mcr.lnprob, args=(y, yerr, par))
 sampler.run_mcmc(pos, steps, progress=True)
-tau = sampler.get_autocorr_time(quiet=True)
+tau          = sampler.get_autocorr_time(quiet=True)
 flat_samples = sampler.get_chain(discard=burn_in, flat=True)
 
 # %%
