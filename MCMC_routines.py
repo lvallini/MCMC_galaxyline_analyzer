@@ -59,3 +59,12 @@ class MC_model:
            return -np.inf
         return lp + self.lnlike(theta,y, yerr, ssfr)
 
+
+    def print_info():
+       print("Priors")
+       print(self.lognMIN,"<log(n/cm^3)  <",self.lognMAX)
+       print(self.logkMIN,"<log(k_s)     <",self.logkMAX)
+       print(self.logZMIN,"<log(Z/Z_sun) <",self.logZMAX)
+
+
+

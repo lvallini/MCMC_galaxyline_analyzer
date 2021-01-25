@@ -39,15 +39,7 @@ mcr = MC_model()
 
 # %%
 # should you want to modify them, uncomment the following lines and set your preferred values
-#mcr.lognMIN = yourvalue
-#mcr.lognMAX = yourvalue
-#mcr.logZMIN = yourvalue
-#mcr.logZMAX = yourvalue
-#mcr.logkMIN = yourvalue
-#mcr.logkMAX = yourvalue
-print(mcr.lognMIN, mcr.lognMAX)
-print(mcr.logZMIN, mcr.logZMAX)
-print(mcr.logkMIN, mcr.logkMAX)
+mcr.print_info()
 
 
 # %%
