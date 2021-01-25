@@ -10,8 +10,8 @@ Details on the equations, and the rationale behind the implemention of this meth
 
 # The repository contains the following files:
 
-- <b> analytical_equation.py </b> gathers all the analytical equations for the calculation of the [CII] and [OIII] surface brightnesses. Require Pyneb.
-- <b> MCMC_routines.py </b> gathers all the routines related to the implementation of the MCMC algorithm brightnesses.
+- <b> analytical_equation.py </b> gathers all the analytical equations for the calculation of the [CII] and [OIII] surface brightnesses. Requires Pyneb.
+- <b> MCMC_routines.py </b> gathers all the routines related to the implementation of the Markov Chain Monte Carlo algorithm brightnesses.
 - <b> ExampleNotebook.ipynb </b>, a Jupyter notebook exemplifying how to use the analytical equations, run the MCMC model, and plot the results.
 
 # Requirements
