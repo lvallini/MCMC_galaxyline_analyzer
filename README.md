@@ -1,6 +1,8 @@
 # General purpose and references
 
-In this repository you can find the Python code for deriving the burstiness parameter, gas density, and gas metallicity of galaxies with known star formation rate surface density (Sigma_SFR) from their [CII] and [OIII] surface brigthness. Details on the equations and the rationale behind the implemention are provided in the following papers
+In this repository you can find the Python code that will allow you to derive the gas density, gas metallicity, and deviations from the Kennicutt-Schmidt relation of a galaxy with known star formation rate surface density (Sigma_SFR) and [CII] and [OIII] surface brigthness. 
+
+Details on the equations, and the rationale behind the implemention of this method are provided in the following papers:
  
   - Vallini et al. 2021, submitted 
   - <a href="https://ui.adsabs.harvard.edu/abs/2020MNRAS.495L..22V/abstract">Vallini et al 2020</a> 
