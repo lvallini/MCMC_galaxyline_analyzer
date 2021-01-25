@@ -60,7 +60,7 @@ class MC_model:
         return lp + self.lnlike(theta,y, yerr, ssfr)
 
 
-    def print_info():
+    def print_info(self):
        print("Priors")
        print(self.lognMIN,"<log(n/cm^3)  <",self.lognMAX)
        print(self.logkMIN,"<log(k_s)     <",self.logkMAX)
