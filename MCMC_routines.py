@@ -45,7 +45,7 @@ class galaxy_template:
 
       print("Galaxy input data")
       #
-      print("  Sigma_SFR         = ",self.Sigma_SFR , "Msun/yr"   )
+      print("  Sigma_SFR         = ",self.Sigma_SFR , "Msun/yr/kpc^2")
       print("  Sigma_CII         = ",self.Sigma_CII , "Lsun/kpc^2")
       print("  Sigma_OIII        = ",self.Sigma_OIII, "Lsun/kpc^2")
       #
