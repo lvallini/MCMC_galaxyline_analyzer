@@ -267,9 +267,11 @@ class MC_model:
 
        logn, logZ, logk  = theta
 
-       delta_galaxy      = Delta(logn=logn    , Z=10**logZ, k=10**logk, Sigma_sfr=ssfr)
-       sigma_cii_galaxy  = Sigma_CII158(logn=logn, Z=10**logZ, k=10**logk, Sigma_sfr=ssfr)
-       sigma_oiii_galaxy = Sigma_OIII88(logn=logn, Z=10**logZ, k=10**logk, Sigma_sfr=ssfr)
+       Z   , k           = 10**logZ, 10**logk
+
+       delta_galaxy      = Delta(       logn=logn, Z=Z, k=k, Sigma_sfr=ssfr)
+       sigma_cii_galaxy  = Sigma_CII158(logn=logn, Z=Z, k=k, Sigma_sfr=ssfr)
+       sigma_oiii_galaxy = Sigma_OIII88(logn=logn, Z=Z, k=k, Sigma_sfr=ssfr)
        return delta_galaxy,sigma_cii_galaxy,sigma_oiii_galaxy
 
 
