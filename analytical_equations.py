@@ -2,8 +2,6 @@ import numpy as np
 import scipy
 import pyneb as pn
 
-O3 = pn.Atom('O', 3) #load the OIII ion from pyneb
-
 
 class emission:
     
@@ -243,7 +241,8 @@ class emission:
     # Part related to the [OIII] line emission (88 and 52 micron), 
     #details can be found in Vallini et al. 2021. Emissivity computed with Pyneb.
     def foiii88(n, Z, U, THII):
-        # emissivity for 88micron:  
+        # emissivity for 88micron: 
+        O3 = pn.Atom('O', 3) #load the OIII ion from pyneb
         emOIII  = O3.getEmissivity(THII, n, wave='88.3m') # erg s^-1 cm^3
         # ionized column density
         N_i=Ni(U,Z)
@@ -258,7 +257,8 @@ class emission:
         return foiii_ionized
     
     def foiii52(n, Z, U, THII):
-        #emissivity for 52micron:  
+        #emissivity for 52micron: 
+        O3 = pn.Atom('O', 3) #load the OIII ion from pyneb
         emOIII  = O3.getEmissivity(THII, n, wave='51.8m') #erg s^-1 cm^3
         # ionized column density
         N_i=Ni(U,Z)
