@@ -1,6 +1,5 @@
 # %%
 import numpy as np
-import analytical_equations as eqs
 from   MCMC_routines import MC_model,galaxy_template
 
 # %%

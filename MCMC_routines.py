@@ -1,5 +1,6 @@
 import numpy as np
-import analytical_equations as eqs
+from emission_models import Delta,Sigma_CII158,Sigma_OIII88
+
 import emcee
 
 class galaxy_template:
@@ -209,10 +210,9 @@ class MC_model:
 
        logn, logZ, logk  = theta
 
-       delta_galaxy      = eqs.Delta(logn=logn    , Z=10**logZ, k=10**logk, Sigma_sfr=ssfr)
-       sigma_cii_galaxy  = eqs.Sigma_CII158(logn=logn, Z=10**logZ, k=10**logk, Sigma_sfr=ssfr)
-       sigma_oiii_galaxy = eqs.Sigma_OIII88(logn=logn, Z=10**logZ, k=10**logk, Sigma_sfr=ssfr)
-       
+       delta_galaxy      = Delta(logn=logn    , Z=10**logZ, k=10**logk, Sigma_sfr=ssfr)
+       sigma_cii_galaxy  = Sigma_CII158(logn=logn, Z=10**logZ, k=10**logk, Sigma_sfr=ssfr)
+       sigma_oiii_galaxy = Sigma_OIII88(logn=logn, Z=10**logZ, k=10**logk, Sigma_sfr=ssfr)
        return delta_galaxy,sigma_cii_galaxy,sigma_oiii_galaxy
 
 

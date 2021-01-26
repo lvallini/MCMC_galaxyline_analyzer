@@ -1,7 +1,7 @@
 import numpy as np
 import scipy
 import pyneb as pn
-from ion_structure import Ni,NF,NHIyi
+from ion_structure import Ni,NF,NHIyi,NHIy0
 from cooling_rates import lambdaCIIh,lambdaCIIe
 
 O3 = pn.Atom('O', 3) #load the OIII ion from pyneb
