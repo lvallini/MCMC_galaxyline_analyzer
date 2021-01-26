@@ -36,22 +36,19 @@ def fcii_DB(n, Z, U, column, TPDR, THII):
     g1_cii=2.
     E12_158um = 0.0079 #energy between the eV
     A21_158um = 2.4e-6 #s^-1
+
+    fcii_neutral    = 0.0
+
     if(n<=3300):
         # rates:  
-        lambdaCII    = lambdaCIIh(TPDR)
         lambdaCII4   = lambdaCIIe(THII)
-
-        fcii_neutral = 0.0
-        fcii_ionized_DB=n*carbon_abundance(Z)*lambdaCII4*NHIy0(U, Z, column)
-    
-        out= fcii_neutral + fcii_ionized_DB
+        fcii_ionized_DB = n*carbon_abundance(Z)*lambdaCII4*NHIy0(U, Z, column)
     else:
-        
-        fcii_neutral = 0.0
         LTE_pop_levels_HII = (g2_cii/g1_cii)*np.exp((-1.602e-12*E12_158um)/(1.38065e-16*THII))
-        fcii_ionized_DB = LTE_pop_levels_HII * carbon_abundance(Z) * A21_158um * (1.602e-12*E12_158um)* NHIy0(U, Z, column)
-        out = fcii_neutral + fcii_ionized_DB
+        fcii_ionized_DB    = LTE_pop_levels_HII * carbon_abundance(Z) * A21_158um * (1.602e-12*E12_158um)* NHIy0(U, Z, column)
         
+    out= fcii_neutral + fcii_ionized_DB
+
     return out
 
 # Emerging [CII] flux in the ionization bounded case, and for NF> N0. Equations 30, 31 in Ferrara et al. 2019
@@ -69,26 +66,27 @@ def fcii_IB_N0(n, Z, U, column, TPDR, THII):
         lambdaCII4   = lambdaCIIe(THII)
 
         # cii from neutral
-        fcii_neutral = n*carbon_abundance(Z)*lambdaCII*(column - N_i)
-    
+        fcii_neutral    = n*carbon_abundance(Z)*lambdaCII*(column - N_i)
         # cii from ionized layer
-        fcii_ionized_IB=n*carbon_abundance(Z)*lambdaCII4*NHIyi(U, Z)
+        fcii_ionized_IB = n*carbon_abundance(Z)*lambdaCII4*NHIyi(U, Z)
     
-        out= fcii_neutral + fcii_ionized_IB
+        out             = fcii_neutral + fcii_ionized_IB
     else:
         LTE_pop_levels_PDR = (g2_cii/g1_cii)*np.exp((-1.602e-12*E12_158um)/(1.38065e-16*TPDR))
         LTE_pop_levels_HII = (g2_cii/g1_cii)*np.exp((-1.602e-12*E12_158um)/(1.38065e-16*THII))
-        fcii_neutral = LTE_pop_levels_PDR * carbon_abundance(Z) * A21_158um * (1.602e-12*E12_158um)* (column - N_i)
-        fcii_ionized_IB = LTE_pop_levels_HII * carbon_abundance(Z) * A21_158um * (1.602e-12*E12_158um)* NHIyi(U, Z)
-        out= fcii_neutral + fcii_ionized_IB
+        #
+        fcii_neutral       = LTE_pop_levels_PDR * carbon_abundance(Z) * A21_158um * (1.602e-12*E12_158um)* (column - N_i)
+        fcii_ionized_IB    = LTE_pop_levels_HII * carbon_abundance(Z) * A21_158um * (1.602e-12*E12_158um)* NHIyi(U, Z)
+        #
+        out                = fcii_neutral + fcii_ionized_IB
         
     return out
 
 
 # Emerging [CII] flux in the ionization bounded case, and for NF< N0. Equations 30, 32 in Ferrara et al. 2019
 def fcii_IB_NF(n, Z, U, column, TPDR, THII):
-    g2_cii=4.
-    g1_cii=2.
+    g2_cii    = 4.
+    g1_cii    = 2.
     E12_158um = 0.0079 #eV
     A21_158um = 2.4e-6 #s^-1
     # ionized column density
@@ -100,116 +98,111 @@ def fcii_IB_NF(n, Z, U, column, TPDR, THII):
         # rates:  
         lambdaCII    = lambdaCIIh(TPDR)
         lambdaCII4   = lambdaCIIe(THII)
-
         # cii from neutral
         fcii_neutral = n*carbon_abundance(Z)*lambdaCII*(N_F - N_i)
-    
         # cii from ionized layer
         fcii_ionized_IB=n*carbon_abundance(Z)*lambdaCII4*NHIyi(U, Z)
-    
-        out= fcii_neutral + fcii_ionized_IB
         
     else:
-        
         LTE_pop_levels_PDR = (g2_cii/g1_cii)*np.exp((-1.602e-12*E12_158um)/(1.38065e-16*TPDR))
         LTE_pop_levels_HII = (g2_cii/g1_cii)*np.exp((-1.602e-12*E12_158um)/(1.38065e-16*THII))
-        fcii_neutral = LTE_pop_levels_PDR * carbon_abundance(Z) * A21_158um * (1.602e-12*E12_158um)* (N_F - N_i)
-        fcii_ionized_IB = LTE_pop_levels_HII * carbon_abundance(Z) * A21_158um * (1.602e-12*E12_158um)* NHIyi(U, Z)
-        out= fcii_neutral + fcii_ionized_IB
+        fcii_neutral       = LTE_pop_levels_PDR * carbon_abundance(Z) * A21_158um * (1.602e-12*E12_158um)* (N_F - N_i)
+        fcii_ionized_IB    = LTE_pop_levels_HII * carbon_abundance(Z) * A21_158um * (1.602e-12*E12_158um)* NHIyi(U, Z)
+
+    out= fcii_neutral + fcii_ionized_IB
         
     return out
 
 
 # The following three equations are instrumental for the Eq. 35 in Ferrara et al. 2019.
 def sigma_cii_DB(logn, Z, k, Sigma_sfr):
-    n= 10**logn
-    SS_g=Sigmag_of_Sigmasfr(Sigma_sfr, k)
-    UU=U_Sigmag_Sigmasfr(Sigma_sfr, SS_g)
-    column_density=(SS_g*10**22.0)/7.5e+7
-    ff=fcii_DB(n, Z, UU, column_density, 100., 1e+4)
-    SS_CII=ff*2.474e+9
+    n             = 10**logn
+    SS_g          = Sigmag_of_Sigmasfr(Sigma_sfr, k)
+    UU            = U_Sigmag_Sigmasfr(Sigma_sfr, SS_g)
+    column_density= (SS_g*10**22.0)/7.5e+7
+    ff            = fcii_DB(n, Z, UU, column_density, 100., 1e+4)
+    SS_CII        = ff*2.474e+9
     return SS_CII
 
 def sigma_cii_IB_N0(logn, Z, k, Sigma_sfr):
-    n= 10**logn
-    SS_g=Sigmag_of_Sigmasfr(Sigma_sfr, k)
-    UU=U_Sigmag_Sigmasfr(Sigma_sfr, SS_g)
-    column_density=(SS_g*10**22.0)/7.5e+7
-    ff=fcii_IB_N0(n, Z, UU, column_density, 100., 1e+4)
-    SS_CII=ff*2.474e+9
+    n             = 10**logn
+    SS_g          = Sigmag_of_Sigmasfr(Sigma_sfr, k)
+    UU            = U_Sigmag_Sigmasfr(Sigma_sfr, SS_g)
+    column_density= (SS_g*10**22.0)/7.5e+7
+    ff            = fcii_IB_N0(n, Z, UU, column_density, 100., 1e+4)
+    SS_CII        = ff*2.474e+9
     return SS_CII
 
 def sigma_cii_IB_NF(logn, Z, k, Sigma_sfr):
-    n= 10**logn
-    SS_g=Sigmag_of_Sigmasfr(Sigma_sfr, k)
-    UU=U_Sigmag_Sigmasfr(Sigma_sfr, SS_g)
-    column_density=(SS_g*10**22.0)/7.5e+7
-    ff=fcii_IB_NF(n, Z, UU, column_density, 100., 1e+4)
-    SS_CII=ff*2.474e+9
+    n             = 10**logn
+    SS_g          = Sigmag_of_Sigmasfr(Sigma_sfr, k)
+    UU            = U_Sigmag_Sigmasfr(Sigma_sfr, SS_g)
+    column_density= (SS_g*10**22.0)/7.5e+7
+    ff            = fcii_IB_NF(n, Z, UU, column_density, 100., 1e+4)
+    SS_CII        = ff*2.474e+9
     return SS_CII
 
 # Eq. 35 in Ferrara et al. 2019
 def Sigma_CII158(logn, Z, k, Sigma_sfr):
     
-    SS_g=Sigmag_of_Sigmasfr(Sigma_sfr, k)
-    UU=U_Sigmag_Sigmasfr(Sigma_sfr, SS_g)
-    column_density=(SS_g*10**22.0)/7.5e+7
-    N_i=Ni(UU,Z)
-    N_F=NF(UU,Z)
+    SS_g           = Sigmag_of_Sigmasfr(Sigma_sfr, k)
+    UU             = U_Sigmag_Sigmasfr(Sigma_sfr, SS_g)
+    column_density = (SS_g*10**22.0)/7.5e+7
+    N_i            = Ni(UU,Z)
+    N_F            = NF(UU,Z)
     
     if(column_density<N_i):
-        out = sigma_cii_DB(logn, Z, k, Sigma_sfr)
+         out = sigma_cii_DB(logn, Z, k, Sigma_sfr)
     elif(column_density<N_F):
-            out=sigma_cii_IB_N0(logn, Z, k, Sigma_sfr)
+         out=sigma_cii_IB_N0(logn, Z, k, Sigma_sfr)
     else:
-            out=sigma_cii_IB_NF(logn, Z, k, Sigma_sfr)
+         out=sigma_cii_IB_NF(logn, Z, k, Sigma_sfr)
     return out
     
 # Part related to the [OIII] line emission (88 and 52 micron), 
 #details can be found in Vallini et al. 2021. Emissivity computed with Pyneb.
 def foiii88(n, Z, U, THII):
     # emissivity for 88micron:  
-    emOIII  = O3.getEmissivity(THII, n, wave='88.3m') # erg s^-1 cm^3
+    emOIII        = O3.getEmissivity(THII, n, wave='88.3m') # erg s^-1 cm^3
     # ionized column density
-    N_i=Ni(U,Z)
-    
+    N_i           = Ni(U,Z)
     #correction for the presence of OII in the ionized region
-    fo3=np.array([0.10994503, 0.73298314, 0.96966708])
-    Uo3=np.array([-3.5, -2.5, -1.5])
-    Xoiii=np.interp(np.log10(U), Uo3, fo3)
-    n1_ntot= O3.getPopulations(THII, n)[1]
-    Nh_oiii = oxygen_abundance(Z)*Xoiii*N_i
+    fo3           = np.array([0.10994503, 0.73298314, 0.96966708])
+    Uo3           = np.array([-3.5, -2.5, -1.5])
+    Xoiii         = np.interp(np.log10(U), Uo3, fo3)
+    n1_ntot       = O3.getPopulations(THII, n)[1]
+    Nh_oiii       = oxygen_abundance(Z)*Xoiii*N_i
     foiii_ionized = emOIII * n * Nh_oiii
     return foiii_ionized
 
 def foiii52(n, Z, U, THII):
     #emissivity for 52micron:  
-    emOIII  = O3.getEmissivity(THII, n, wave='51.8m') #erg s^-1 cm^3
+    emOIII        = O3.getEmissivity(THII, n, wave='51.8m') #erg s^-1 cm^3
     # ionized column density
-    N_i=Ni(U,Z)
+    N_i           = Ni(U,Z)
     #correction for the presence of OII in the ionized region
-    fo3=np.array([0.10994503, 0.73298314, 0.96966708])
-    Uo3=np.array([-3.5, -2.5, -1.5])
-    Xoiii=np.interp(np.log10(U), Uo3, fo3)
-    n2_ntot= O3.getPopulations(THII, n)[2]
-    Nh_oiii = oxygen_abundance(Z)*Xoiii*N_i
+    fo3           = np.array([0.10994503, 0.73298314, 0.96966708])
+    Uo3           = np.array([-3.5, -2.5, -1.5])
+    Xoiii         = np.interp(np.log10(U), Uo3, fo3)
+    n2_ntot       = O3.getPopulations(THII, n)[2]
+    Nh_oiii       = oxygen_abundance(Z)*Xoiii*N_i
     foiii_ionized = emOIII * n * Nh_oiii
     return foiii_ionized 
 
 def Sigma_OIII88(logn, Z, k, Sigma_sfr):
-    n=10**logn
-    SS_g=Sigmag_of_Sigmasfr(Sigma_sfr, k)
-    UU=U_Sigmag_Sigmasfr(Sigma_sfr, SS_g)
-    ff=foiii88(n, Z, UU, 1e+4)
-    out=ff*2.474e+9 # 
+    n    = 10**logn
+    SS_g = Sigmag_of_Sigmasfr(Sigma_sfr, k)
+    UU   = U_Sigmag_Sigmasfr(Sigma_sfr, SS_g)
+    ff   = foiii88(n, Z, UU, 1e+4)
+    out  = ff*2.474e+9 # 
     return out
 
 def Sigma_OIII52(logn, Z, k, Sigma_sfr):
-    n=10**logn
-    SS_g=Sigmag_of_Sigmasfr(Sigma_sfr, k)
-    UU=U_Sigmag_Sigmasfr(Sigma_sfr, SS_g)
-    ff=foiii52(n, Z, UU, 1e+4)
-    out=ff*2.474e+9
+    n    = 10**logn
+    SS_g = Sigmag_of_Sigmasfr(Sigma_sfr, k)
+    UU   = U_Sigmag_Sigmasfr(Sigma_sfr, SS_g)
+    ff   = foiii52(n, Z, UU, 1e+4)
+    out  = ff*2.474e+9
     return out
 
 def Delta(logn, Z, k, Sigma_sfr):
