@@ -1,7 +1,7 @@
 import numpy as np
 import scipy
 import pyneb as pn
-from ion_structure import Ni,NF,NHIyi,NHIy0
+from ion_structure import compute_Ni,compute_NF,compute_NHIyi,compute_NHIy0
 from cooling_rates import compute_lambda_CII_h,compute_lambda_CII_e
 
 O3 = pn.Atom('O', 3) #load the OIII ion from pyneb
@@ -70,10 +70,10 @@ def fcii_DB(n, Z, U, column,  TPDR=100.0, THII=1.e+4):
     if(n<=3300):
         # rates:  
         lambdaCII4      = compute_lambda_CII_e(T=THII)
-        fcii_ionized_DB = n*carbon_abundance(Z)*lambdaCII4*NHIy0(U, Z, column)
+        fcii_ionized_DB = n*carbon_abundance(Z)*lambdaCII4*compute_NHIy0(U, Z, column)
     else:
         LTE_pop_levels_HII = (g2_cii/g1_cii) * pop_LTE(T_in=THII,E_in=E12_158um)
-        fcii_ionized_DB    = LTE_pop_levels_HII * carbon_abundance(Z) * A21_158um * (ev2erg*E12_158um)* NHIy0(U, Z, column)
+        fcii_ionized_DB    = LTE_pop_levels_HII * carbon_abundance(Z) * A21_158um * (ev2erg*E12_158um)* compute_NHIy0(U, Z, column)
         
     out = fcii_neutral + fcii_ionized_DB
 
@@ -103,7 +103,7 @@ def fcii_IB_N0(n, Z, U, column, TPDR=100.0, THII=1.e+4):
     from atomic_data import g2_cii,g1_cii,E12_158um,A21_158um,ev2erg
 
     # ionized column density
-    N_i= Ni(U,Z)
+    N_i= compute_Ni(U,Z)
     
     if(n<=3300):
         # rates:  
@@ -113,14 +113,14 @@ def fcii_IB_N0(n, Z, U, column, TPDR=100.0, THII=1.e+4):
         # cii from neutral
         fcii_neutral    = n*carbon_abundance(Z)*lambdaCII*(column - N_i)
         # cii from ionized layer
-        fcii_ionized_IB = n*carbon_abundance(Z)*lambdaCII4*NHIyi(U, Z)
+        fcii_ionized_IB = n*carbon_abundance(Z)*lambdaCII4*compute_NHIyi(U, Z)
     
     else:
         LTE_pop_levels_PDR = (g2_cii/g1_cii)*pop_LTE(T_in=TPDR,E_in=E12_158um)
         LTE_pop_levels_HII = (g2_cii/g1_cii)*pop_LTE(T_in=THII,E_in=E12_158um)
         #
         fcii_neutral       = LTE_pop_levels_PDR * carbon_abundance(Z) * A21_158um * (ev2erg*E12_158um)* (column - N_i)
-        fcii_ionized_IB    = LTE_pop_levels_HII * carbon_abundance(Z) * A21_158um * (ev2erg*E12_158um)* NHIyi(U, Z)
+        fcii_ionized_IB    = LTE_pop_levels_HII * carbon_abundance(Z) * A21_158um * (ev2erg*E12_158um)* compute_NHIyi(U, Z)
 
     out             = fcii_neutral + fcii_ionized_IB
 
@@ -135,9 +135,9 @@ def fcii_IB_NF(n, Z, U, column, TPDR=100.0, THII=1.e+4):
     from atomic_data import g2_cii,g1_cii,E12_158um,A21_158um,ev2erg
 
     # ionized column density
-    N_i= Ni(U,Z)
+    N_i= compute_Ni(U,Z)
     # NL column density
-    N_F=NF(U, Z)
+    N_F=compute_NF(U, Z)
     
     if(n<=3300):
         # rates:  
@@ -146,13 +146,13 @@ def fcii_IB_NF(n, Z, U, column, TPDR=100.0, THII=1.e+4):
         # cii from neutral
         fcii_neutral = n*carbon_abundance(Z)*lambdaCII*(N_F - N_i)
         # cii from ionized layer
-        fcii_ionized_IB=n*carbon_abundance(Z)*lambdaCII4*NHIyi(U, Z)
+        fcii_ionized_IB=n*carbon_abundance(Z)*lambdaCII4*compute_NHIyi(U, Z)
         
     else:
         LTE_pop_levels_PDR = (g2_cii/g1_cii)*pop_LTE(T_in=TPDR,E_in=E12_158um)
         LTE_pop_levels_HII = (g2_cii/g1_cii)*pop_LTE(T_in=THII,E_in=E12_158um)
         fcii_neutral       = LTE_pop_levels_PDR * carbon_abundance(Z) * A21_158um * (ev2erg*E12_158um)* (N_F - N_i)
-        fcii_ionized_IB    = LTE_pop_levels_HII * carbon_abundance(Z) * A21_158um * (ev2erg*E12_158um)* NHIyi(U, Z)
+        fcii_ionized_IB    = LTE_pop_levels_HII * carbon_abundance(Z) * A21_158um * (ev2erg*E12_158um)* compute_NHIyi(U, Z)
 
     out= fcii_neutral + fcii_ionized_IB
         
@@ -166,8 +166,8 @@ def Sigma_CII158(logn, Z, k, Sigma_sfr):
     """
 
     UU , column_density = compute_U_and_N(Z=Z,k=k,Sigma_sfr=Sigma_sfr)
-    N_i                 = Ni(U=UU,Z=Z)
-    N_F                 = NF(U=UU,Z=Z)
+    N_i                 = compute_Ni(U=UU,Z=Z)
+    N_F                 = compute_NF(U=UU,Z=Z)
     n                   = 10**logn
 
     if(column_density<N_i):
@@ -198,7 +198,7 @@ def foiii(n, Z, U, THII,line="88um"):
       emOIII        = O3.getEmissivity(THII, n, wave='88.3m') # erg s^-1 cm^3
 
     # ionized column density
-    N_i           = Ni(U=U,Z=Z)
+    N_i           = compute_Ni(U=U,Z=Z)
     #correction for the presence of OII in the ionized region
     fo3           = np.array([0.10994503, 0.73298314, 0.96966708])
     Uo3           = np.array([-3.5, -2.5, -1.5])
