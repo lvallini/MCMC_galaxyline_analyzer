@@ -197,35 +197,50 @@ class MC_model:
 
         return flat_samples
 
-    def set_mc_parameters(self,n_walkers= 10,steps=200,burn_in=50):
+    def set_mc_parameters(self,n_walkers= None,steps=None,burn_in=None):
 
-        self.n_walkers = n_walkers
-        self.steps     = steps
-        self.burn_in   = burn_in
+        # set priors for the model
+        # if input is None, no change is done
+        if n_walkers is not None:
+          self.n_walkers = n_walkers
+        if steps is not None:
+          self.steps     = steps
+        if burn_in is not None:
+          self.burn_in   = burn_in
 
     def set_priors(self
-            , lognMIN =  0.5, lognMAX =  3.5
-            , logkMIN = -1.0, logkMAX =  2.5
-            , logZMIN = -1.5, logZMAX =  0.0
+            , lognMIN =  None, lognMAX =   None
+            , logkMIN =  None, logkMAX =   None
+            , logZMIN =  None, logZMAX =   None
 
             ):
 
-       # priors for the model
-       self.lognMIN = lognMIN   # 
-       self.lognMAX = lognMAX   # maximum log density [cm-3]
-       self.logkMIN = logkMIN   # minimum log k_s
-       self.logkMAX = logkMAX   # maximum log k_s
-       self.logZMIN = logZMIN   # 
-       self.logZMAX = logZMAX   # maximum log metallicity [Zsun]
+       # set priors for the model
+       # if input is None, no change is done
+       if lognMIN is not None:
+         self.lognMIN = lognMIN   # 
+       if lognMIN is not None:
+         self.lognMAX = lognMAX   # maximum log density [cm-3]
+       if logkMIN is not None:
+         self.logkMIN = logkMIN   # minimum log k_s
+       if logkMAX is not None:
+         self.logkMAX = logkMAX   # maximum log k_s
+       if logZMIN is not None:
+         self.logZMIN = logZMIN   # 
+       if logZMAX is not None:
+         self.logZMAX = logZMAX   # maximum log metallicity [Zsun]
 
     def set_galaxy_data(self,galaxy_data = None):
         self.galaxy_data = galaxy_data
 
-    def set_walkers(self,logn0=2.0, logZ0=-0.5, logk0 = 0.3):
+    def set_walkers(self,logn0=None, logZ0=None, logk0 = None):
 
-        self.logn0 = logn0
-        self.logZ0 = logZ0
-        self.logk0 = logk0
+        if logn0 is not None:
+          self.logn0 = logn0
+        if logZ0 is not None:
+          self.logZ0 = logZ0
+        if logk0 is not None:
+          self.logk0 = logk0
 
     def check_bounds(self,theta):
        logn, logZ, logk = theta
