@@ -6,22 +6,64 @@ import emcee
 class galaxy_template:
 
   def __init__(self
-               ,Sigma_SFR  = 2.0
-               ,Sigma_CII  = 3.0e+7
-               ,Sigma_OIII = 7.0e+7
+               ,Sigma_SFR           = 2.0     # Msun/yr/kpc
+               ,Sigma_CII           = 3.0e+7  # Lsun/kpc^2
+               ,Sigma_OIII          = 7.0e+7  # Lsun/kpc^2
                #
-               ,rel_err_Sigma_CII      = 0.2
-               ,rel_err_Sigma_OIII     = 0.2
-               ,rel_err_Delta          = 0.2
+               ,rel_err_Sigma_CII   = 0.2     # relative error on the SigmaCII
+               ,rel_err_Sigma_OIII  = 0.2     # relative error on the SigmaOIII
+               ,rel_err_Delta       = 0.2     # relative error on the Delta
                ):
 
-    self.Sigma_SFR       = Sigma_SFR  # Msun/yr/kpc^2
-    self.Sigma_CII       = Sigma_CII  # Lsun/kpc^2
-    self.Sigma_OIII      = Sigma_OIII # Lsun/kpc^2
+      # setup the template for the data
+      #
+      self.Sigma_SFR          = None # Msun/yr/kpc^2
+      self.Sigma_CII          = None # Lsun/kpc^2
+      self.Sigma_OIII         = None # Lsun/kpc^2
+      # 
+      self.rel_err_Sigma_CII  = None
+      self.rel_err_Sigma_OIII = None
+      self.rel_err_Delta      = None
+   
+      # set the input errors
+      self.set_relative_errors(
+                                rel_err_Sigma_CII  = rel_err_Sigma_CII  
+                               ,rel_err_Sigma_OIII = rel_err_Sigma_OIII 
+                               ,rel_err_Delta      = rel_err_Delta      
+              )
 
-    self.rel_err_Sigma_CII    = rel_err_Sigma_CII  # relative error on the SigmaCII
-    self.rel_err_Sigma_OIII   = rel_err_Sigma_OIII # relative error on the SigmaOIII
-    self.rel_err_Delta        = rel_err_Delta       # relative error on the Delta
+      # set the input data
+      self.set_data(
+                    Sigma_SFR  = Sigma_SFR
+                   ,Sigma_CII  = Sigma_CII
+                   ,Sigma_OIII = Sigma_OIII
+                   )
+
+  def set_relative_errors(self
+          ,rel_err_Sigma_CII      = None
+          ,rel_err_Sigma_OIII     = None
+          ,rel_err_Delta          = None
+          ):
+
+    if rel_err_Sigma_CII is not None:
+      self.rel_err_Sigma_CII    = rel_err_Sigma_CII  
+    if rel_err_Sigma_OIII is not None:
+      self.rel_err_Sigma_OIII   = rel_err_Sigma_OIII
+    if rel_err_Delta is not None:
+      self.rel_err_Delta        = rel_err_Delta   
+
+  def set_data(self
+                   ,Sigma_SFR  = None
+                   ,Sigma_CII  = None
+                   ,Sigma_OIII = None
+          ):
+
+    if Sigma_SFR is not None:
+      self.Sigma_SFR       = Sigma_SFR
+    if Sigma_CII is not None:
+      self.Sigma_CII       = Sigma_CII  
+    if Sigma_OIII is not None:
+      self.Sigma_OIII      = Sigma_OIII 
 
   def data_for_MCMC(self):
       y    = np.array([self.Deltagalaxy()

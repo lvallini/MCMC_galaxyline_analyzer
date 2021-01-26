@@ -20,6 +20,13 @@ galaxy_example = galaxy_template(
               )
 galaxy_example.print_info()
 
+"""
+change error for Sigma CII
+"""
+
+galaxy_example.set_relative_errors(rel_err_Sigma_CII = 0.1)
+galaxy_example.print_info()
+
 # %%
 """
 # Set up the MCMC details
