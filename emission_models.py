@@ -143,87 +143,68 @@ def fcii_IB_NF(n, Z, U, column, TPDR=100.0, THII=1.e+4):
         
     return out
 
-
-# The following three equations are instrumental for the Eq. 35 in Ferrara et al. 2019.
-def sigma_cii_DB(logn, Z, k, Sigma_sfr):
-    n                   = 10**logn
-    UU , column_density = compute_U_and_N(Z=Z,k=k,Sigma_sfr=Sigma_sfr)
-    ff                  = fcii_DB(n = n, Z= Z, U = UU, column=column_density, TPDR=100.0, THII=1e+4)
-    SS_CII              = ff*2.474e+9
-    return SS_CII
-
-def sigma_cii_IB_N0(logn, Z, k, Sigma_sfr):
-    n                   = 10**logn
-    UU , column_density = compute_U_and_N(Z=Z,k=k,Sigma_sfr=Sigma_sfr)
-    ff                  = fcii_IB_N0(n = n, Z= Z, U = UU, column=column_density, TPDR=100.0, THII=1e+4)
-    SS_CII              = ff*2.474e+9
-    return SS_CII
-
-def sigma_cii_IB_NF(logn, Z, k, Sigma_sfr):
-    n                   = 10**logn
-    UU , column_density = compute_U_and_N(Z=Z,k=k,Sigma_sfr=Sigma_sfr)
-    ff                  = fcii_IB_NF(n = n, Z= Z, U = UU, column=column_density, TPDR=100.0, THII=1e+4)
-    SS_CII              = ff*2.474e+9
-    return SS_CII
-
-# Eq. 35 in Ferrara et al. 2019
 def Sigma_CII158(logn, Z, k, Sigma_sfr):
-    
+
+    """
+    compute the CII surface brightenss
+    Eq. 35 in Ferrara et al. 2019
+    """
+
     UU , column_density = compute_U_and_N(Z=Z,k=k,Sigma_sfr=Sigma_sfr)
     N_i                 = Ni(U=UU,Z=Z)
     N_F                 = NF(U=UU,Z=Z)
-    
+    n                   = 10**logn
+
     if(column_density<N_i):
-         out = sigma_cii_DB(logn=logn, Z=Z, k=k, Sigma_sfr=Sigma_sfr)
+         flux = fcii_DB(n = n, Z= Z, U = UU, column=column_density, TPDR=100.0, THII=1e+4)
     elif(column_density<N_F):
-         out=sigma_cii_IB_N0(logn=logn, Z=Z, k=k, Sigma_sfr=Sigma_sfr)
+         flux = fcii_IB_N0(n = n, Z= Z, U = UU, column=column_density, TPDR=100.0, THII=1e+4)
     else:
-         out=sigma_cii_IB_NF(logn=logn, Z=Z, k=k, Sigma_sfr=Sigma_sfr)
+         flux = fcii_IB_NF(n = n, Z= Z, U = UU, column=column_density, TPDR=100.0, THII=1e+4)
+
+    # flux to surface brightness conversion
+    out = flux*2.474e+9
 
     return out
-    
-# Part related to the [OIII] line emission (88 and 52 micron), 
-#details can be found in Vallini et al. 2021. Emissivity computed with Pyneb.
-def foiii88(n, Z, U, THII):
-    # emissivity for 88micron:  
-    emOIII        = O3.getEmissivity(THII, n, wave='88.3m') # erg s^-1 cm^3
-    # ionized column density
-    N_i           = Ni(U,Z)
-    #correction for the presence of OII in the ionized region
-    fo3           = np.array([0.10994503, 0.73298314, 0.96966708])
-    Uo3           = np.array([-3.5, -2.5, -1.5])
-    Xoiii         = np.interp(np.log10(U), Uo3, fo3)
-    n1_ntot       = O3.getPopulations(THII, n)[1]
-    Nh_oiii       = oxygen_abundance(Z)*Xoiii*N_i
-    foiii_ionized = emOIII * n * Nh_oiii
-    return foiii_ionized
 
-def foiii52(n, Z, U, THII):
-    #emissivity for 52micron:  
-    emOIII        = O3.getEmissivity(THII, n, wave='51.8m') #erg s^-1 cm^3
+def foiii(n, Z, U, THII,line="88um"):
+
+    """
+    flux for the [OIII] line emission (88 and 52 micron), 
+    Emissivity computed with Pyneb.
+    details can be found in Vallini et al. 2021.
+    """
+
+    emOIII = None
+    # get emissivity and relative population for the selected line:  
+    if line == "52um":
+      emOIII        = O3.getEmissivity(THII, n, wave='51.8m') # erg s^-1 cm^3
+    if line == "88um":
+      emOIII        = O3.getEmissivity(THII, n, wave='88.3m') # erg s^-1 cm^3
+
     # ionized column density
     N_i           = Ni(U,Z)
     #correction for the presence of OII in the ionized region
     fo3           = np.array([0.10994503, 0.73298314, 0.96966708])
     Uo3           = np.array([-3.5, -2.5, -1.5])
     Xoiii         = np.interp(np.log10(U), Uo3, fo3)
-    n2_ntot       = O3.getPopulations(THII, n)[2]
+
     Nh_oiii       = oxygen_abundance(Z)*Xoiii*N_i
-    foiii_ionized = emOIII * n * Nh_oiii
-    return foiii_ionized 
+    out           = emOIII * n * Nh_oiii
+
+    return out
 
 def Sigma_OIII88(logn, Z, k, Sigma_sfr):
     n       = 10**logn
     UU , __ =  compute_U_and_N(Z=Z,k=k,Sigma_sfr=Sigma_sfr)
-    ff      = foiii88(n, Z, UU, 1e+4)
+    ff      = foiii(n=n, Z=Z, U=UU, THII=1e+4,line="88um")
     out     = ff*2.474e+9 # 
     return out
 
 def Sigma_OIII52(logn, Z, k, Sigma_sfr):
     n       = 10**logn
     UU , __ =  compute_U_and_N(Z=Z,k=k,Sigma_sfr=Sigma_sfr)
-
-    ff      = foiii52(n, Z, UU, 1e+4)
+    ff      = foiii(n, Z, UU, 1e+4,line="52um")
     out     = ff*2.474e+9
     return out
 
