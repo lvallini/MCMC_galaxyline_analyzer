@@ -1,5 +1,6 @@
 import numpy as np
 import analytical_equations as eqs
+import emcee
 
 class galaxy_template:
 
@@ -10,16 +11,16 @@ class galaxy_template:
                #
                ,rel_err_Sigma_CII      = 0.2
                ,rel_err_Sigma_OIII     = 0.2
-               ,rel_err_Delta         = 0.2
+               ,rel_err_Delta          = 0.2
                ):
 
     self.Sigma_SFR       = Sigma_SFR  # Msun/yr/kpc^2
     self.Sigma_CII       = Sigma_CII  # Lsun/kpc^2
     self.Sigma_OIII      = Sigma_OIII # Lsun/kpc^2
 
-    self.rel_err_Sigma_CII     = rel_err_Sigma_CII  # relative error on the SigmaCII
-    self.rel_err_Sigma_OIII    = rel_err_Sigma_OIII # relative error on the SigmaOIII
-    self.rel_err_Delta        = rel_err_Delta     # relative error on the Delta
+    self.rel_err_Sigma_CII    = rel_err_Sigma_CII  # relative error on the SigmaCII
+    self.rel_err_Sigma_OIII   = rel_err_Sigma_OIII # relative error on the SigmaOIII
+    self.rel_err_Delta        = rel_err_Delta       # relative error on the Delta
 
   def data_for_MCMC(self):
       y    = np.array([self.Deltagalaxy()
@@ -57,43 +58,134 @@ class MC_model:
 
     def __init__(self
 
-            , lognMIN =  0.5
-            , lognMAX =  3.5
-            , logkMIN = -1.0
-            , logkMAX =  2.5
-            , logZMIN = -1.5
-            , logZMAX =  0.0
+            # priors
+            , lognMIN =  0.5, lognMAX =  3.5 # minimum and maximum log density [cm-3]
+            , logkMIN = -1.0, logkMAX =  2.5 # minimum and maximum log k_s
+            , logZMIN = -1.5, logZMAX =  0.0 # minimum and maximum log metallicity [Zsun]
+            #
+            # MCMC parameters
+            ,n_walkers           = 10 
+            ,steps               = 200
+            ,burn_in             = 50
+            #
+            # starting point for the walkers
+            ,logn0=2.0, logZ0=-0.5, logk0 = 0.3
+
+            ):
+
+
+       # priors for the MCMC
+       self.lognMIN = None
+       self.lognMAX = None
+       self.logkMIN = None
+       self.logkMAX = None
+       self.logZMIN = None
+       self.logZMAX = None
+
+       # walker init
+       self.logn0   = None
+       self.logZ0   = None
+       self.logk0   = None
+
+       # eemc parameters
+       self.n_dim     = 3
+       self.n_walkers = None
+       self.steps     = None
+       self.burn_in   = None
+
+       self.galaxy_data = None
+
+       self.set_priors(
+               lognMIN =lognMIN, lognMAX = lognMAX
+             , logkMIN =logkMIN, logkMAX = logkMAX
+             , logZMIN =logZMIN, logZMAX = logZMAX
+             )
+
+       self.set_walkers(logn0=logn0, logZ0=logZ0, logk0 = logk0)
+
+       self.set_mc_parameters(n_walkers=n_walkers,steps=steps,burn_in=burn_in)
+
+
+    def run_model(self,verbose=True):
+
+        if verbose:
+          print("about to run")
+          self.print_info()
+          print("galaxy data")
+          self.galaxy_data.print_info()
+
+        y, yerr, par   = self.galaxy_data.data_for_MCMC()
+
+        # init walkers
+        ok = self.check_bounds(theta=tuple([self.logn0,self.logZ0,self.logk0]))
+        if not ok:
+            print("Initial position of the walkers is out of the priors")
+        assert ok
+        starting_point = [self.logn0, self.logZ0, self.logk0]
+        pos            = [starting_point + 1e-5*np.random.randn(self.n_dim) for i in range(self.n_walkers)]
+
+        sampler        = emcee.EnsembleSampler(self.n_walkers, self.n_dim, self.lnprob, args=(y, yerr, par))
+        sampler.run_mcmc(pos, self.steps, progress=True)
+        tau            = sampler.get_autocorr_time(quiet=True)
+        flat_samples   = sampler.get_chain(discard=self.burn_in, flat=True)
+
+        return flat_samples
+
+    def set_mc_parameters(self,n_walkers= 10,steps=200,burn_in=50):
+
+        self.n_walkers = n_walkers
+        self.steps     = steps
+        self.burn_in   = burn_in
+
+    def set_priors(self
+            , lognMIN =  0.5, lognMAX =  3.5
+            , logkMIN = -1.0, logkMAX =  2.5
+            , logZMIN = -1.5, logZMAX =  0.0
 
             ):
 
        # priors for the model
-       self.lognMIN = lognMIN   # minimum log density [cm-3]
+       self.lognMIN = lognMIN   # 
        self.lognMAX = lognMAX   # maximum log density [cm-3]
        self.logkMIN = logkMIN   # minimum log k_s
        self.logkMAX = logkMAX   # maximum log k_s
-       self.logZMIN = logZMIN   # minimum log metallicity [Zsun]
+       self.logZMIN = logZMIN   # 
        self.logZMAX = logZMAX   # maximum log metallicity [Zsun]
 
        assert self.lognMIN < self.lognMAX
        assert self.logkMIN < self.logkMAX
        assert self.logZMIN < self.logZMAX
 
+    def set_galaxy_data(self,galaxy_data = None):
+        assert isinstance(galaxy_data,galaxy_template)
+        self.galaxy_data = galaxy_data
 
-    def lnprior(self,theta):
+    def set_walkers(self,logn0=2.0, logZ0=-0.5, logk0 = 0.3):
+
+        self.logn0 = logn0
+        self.logZ0 = logZ0
+        self.logk0 = logk0
+
+    def check_bounds(self,theta):
        logn, logZ, logk = theta
-
-       #flat priors on logn, logk, and log Z
 
        ok =        self.lognMIN < logn < self.lognMAX
        ok = ok and self.logkMIN < logk < self.logkMAX
        ok = ok and self.logZMIN < logZ < self.logZMAX
 
-       if  ok:
-           out = 0.0
-       else:
-           out = -np.inf
+       return ok
+
+    def lnprior(self,theta):
+       #flat priors on logn, logk, and log Z
+
+        ok = self.check_bounds(theta=theta)
+
+        if  ok:
+            out = 0.0
+        else:
+            out = -np.inf
        
-       return out
+        return out
 
     def model(self,theta, ssfr):
 
@@ -122,10 +214,19 @@ class MC_model:
         return out
 
     def print_info(self):
+       print("MC parameters")
+       print("  n_walkers",self.n_walkers)
+       print("  steps    ",self.steps)
+       print("  burn_in  ",self.burn_in)
+
        print("Priors")
        print("{:10} {:10} {:10}".format(self.lognMIN,"< log(n/cm^-3) <",self.lognMAX))
        print("{:10} {:10} {:10}".format(self.logkMIN,"< log(k_s)     <",self.logkMAX))
        print("{:10} {:10} {:10}".format(self.logZMIN,"< log(Z/Z_sun) <",self.logZMAX))
 
+       print("walkers starting point")
+       print("  log n ",self.logn0)
+       print("  log Z ",self.logZ0)
+       print("  log k ",self.logk0)
 
 

@@ -2,7 +2,6 @@
 import numpy as np
 import analytical_equations as eqs
 from   MCMC_routines import MC_model,galaxy_template
-import emcee
 
 # %%
 """
@@ -24,46 +23,69 @@ galaxy_example.print_info()
 
 # %%
 """
-# Set the ranges for the flat priors in the MCMC routines 
-The ranges are bound between (lognMIN, lognMAX) (logZMIN, logZMAX), (logkMIN, logkMAX), with the following defaults
- - lognMIN = 0.5, lognMAX= 3.5
- - logZMIN = -1.5, logZMAX= 0
- - logkMIN = -1, logkMAX= 2.5
-
-"""
-
-mcr = MC_model(
-  lognMIN = 0.5, lognMAX= 3.5
- ,logZMIN = -1.5, logZMAX= 0
- ,logkMIN = -1, logkMAX= 2.5
-        )
-
-# %%
-# should you want to modify them, uncomment the following lines and set your preferred values
-mcr.print_info()
-
-
-# %%
-"""
 # Set up the MCMC details
 
+there are 3 kind of parameters:
+    priors
+    walker initial position
+    MCMC hyperparameters
+these can be set at initialization time of MC_model or at a later stage
+default parameter are adopted if no initialization is provvided
+"""
+
+mcr = MC_model()
+
+"""
+Set the ranges for the flat priors in the MCMC routines 
+The ranges are bound between (lognMIN, lognMAX) (logZMIN, logZMAX), (logkMIN, logkMAX), with the following defaults
+"""
+
+mcr.set_priors(
+               lognMIN = 0.5, lognMAX= 3.5
+              ,logZMIN = -1.5, logZMAX= 0
+              ,logkMIN = -1, logkMAX= 2.5
+              )
+
+"""
+<b> starting point </b>  i.e. the log$n_0$,log$Z_0$,log$k_0$ starting points around which the walkers are initialized
+"""
+
+mcr.set_walkers(
+         logn0=2.0
+        ,logZ0=-0.5
+        ,logk0 = 0.3
+        )
+
+"""
+set the MCMC parameters
 For further details on the meaning of these parameters, 
 please have a look at the emcee documentation at https://emcee.readthedocs.io/en/stable/
-- <b> n_dim </b> i.e. the number of dimensions (in this case 3 because our model has three free parameters)
 - <b> n_walkers </b> i.e. the the number of walkers
 - <b> steps </b> i.e. the number of steps for each walker
 - <b> burn_in </b> i.e. the number of initial steps that one may want to discard (the so-called "burn-in")
-- <b> starting point </b>  i.e. the log$n_0$,log$Z_0$,log$k_0$ starting points around which the walkers are initialized
 """
 
+mcr.set_mc_parameters(
+         n_walkers = 10
+        ,steps     = 200
+        ,burn_in   = 50
+        )
+
+"""
+print out your settings
+"""
 # %%
-n_dim               = 3 
-n_walkers           = 10 
-steps               = 200
-burn_in             = 50
-logn0, logZ0, logk0 = 2.0, -0.5, 0.3
-starting_point      = [logn0, logZ0, logk0]
-pos                 = [starting_point + 1e-5*np.random.randn(n_dim) for i in range(n_walkers)]
+mcr.print_info()
+
+"""
+input the galaxy data you have constructed to the MCMC
+"""
+
+mcr.set_galaxy_data(galaxy_data = galaxy_example)
+
+# %%
+# %%
+
 
 # %%
 """
@@ -73,17 +95,11 @@ Further details on the possibile optimization of the MCMC algorithm and the outp
 
 # %%
 
-y, yerr, par = galaxy_example.data_for_MCMC()
-
-sampler      = emcee.EnsembleSampler(n_walkers, n_dim, mcr.lnprob, args=(y, yerr, par))
-sampler.run_mcmc(pos, steps, progress=True)
-tau          = sampler.get_autocorr_time(quiet=True)
-flat_samples = sampler.get_chain(discard=burn_in, flat=True)
+flat_samples = mcr.run_model(verbose=True)
 
 # %%
 """
 # Plot the result
-
 For more information and details please refer to: https://corner.readthedocs.io/en/latest/pages/quickstart.html
 """
 
