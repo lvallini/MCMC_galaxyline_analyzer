@@ -5,4 +5,5 @@ g1_cii    = 2.0
 E12_158um = 0.0079 # eV
 A21_158um = 2.4e-6 # s^-1
 
+ev2erg    = 1.602e-12 # conversion form eV to erg
 
