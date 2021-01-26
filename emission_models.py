@@ -20,8 +20,8 @@ def carbon_abundance(Z):
      
 # Gas surface density from the SFR surface density assuming the Kennicutt-Schmidt relation. 
 #Sigma_sfr in Msun/yr/kpc^2, k is the burstiness parameter
-def Sigmag_of_Sigmasfr(Sigma_sfr, k, n=1.4):
-    out=(((k*(10.0**-12))**-1)*Sigma_sfr)**(1./n)
+def Sigmag_of_Sigmasfr(Sigma_sfr, k, ks_fit=1.4):
+    out=(((k*(10.0**-12))**-1)*Sigma_sfr)**(1./ks_fit)
     return out
 
 # Ionizaton parameter from SFR and gas surface densities. 
@@ -29,6 +29,18 @@ def Sigmag_of_Sigmasfr(Sigma_sfr, k, n=1.4):
 def U_Sigmag_Sigmasfr(Sigma_sfr, Sigma_g):
     out= (1.7e+14)*(Sigma_sfr/(Sigma_g*Sigma_g))
     return out
+
+def compute_U_and_N(Z,k,Sigma_sfr,ks_fit=1.4 ):
+
+    # the gas surface density is computed from the modified SK
+    surface_density_gas = Sigmag_of_Sigmasfr(Sigma_sfr=Sigma_sfr, k=k,ks_fit=ks_fit)
+    # convert the gas surface density to a column density
+    column_density      = (surface_density_gas*10**22.0)/7.5e+7
+    # compute the ionization parameter
+    ionization_parameter= U_Sigmag_Sigmasfr(Sigma_sfr=Sigma_sfr, Sigma_g = surface_density_gas)
+
+    return ionization_parameter,column_density 
+
 
 # Emerging [CII] flux for the density bounded case dens bounded case.  Eq. 34 in Ferrara et al. 2019
 def fcii_DB(n, Z, U, column, TPDR, THII):
@@ -70,16 +82,15 @@ def fcii_IB_N0(n, Z, U, column, TPDR, THII):
         # cii from ionized layer
         fcii_ionized_IB = n*carbon_abundance(Z)*lambdaCII4*NHIyi(U, Z)
     
-        out             = fcii_neutral + fcii_ionized_IB
     else:
         LTE_pop_levels_PDR = (g2_cii/g1_cii)*np.exp((-1.602e-12*E12_158um)/(1.38065e-16*TPDR))
         LTE_pop_levels_HII = (g2_cii/g1_cii)*np.exp((-1.602e-12*E12_158um)/(1.38065e-16*THII))
         #
         fcii_neutral       = LTE_pop_levels_PDR * carbon_abundance(Z) * A21_158um * (1.602e-12*E12_158um)* (column - N_i)
         fcii_ionized_IB    = LTE_pop_levels_HII * carbon_abundance(Z) * A21_158um * (1.602e-12*E12_158um)* NHIyi(U, Z)
-        #
-        out                = fcii_neutral + fcii_ionized_IB
-        
+
+    out             = fcii_neutral + fcii_ionized_IB
+
     return out
 
 
@@ -116,28 +127,22 @@ def fcii_IB_NF(n, Z, U, column, TPDR, THII):
 
 # The following three equations are instrumental for the Eq. 35 in Ferrara et al. 2019.
 def sigma_cii_DB(logn, Z, k, Sigma_sfr):
-    n             = 10**logn
-    SS_g          = Sigmag_of_Sigmasfr(Sigma_sfr, k)
-    UU            = U_Sigmag_Sigmasfr(Sigma_sfr, SS_g)
-    column_density= (SS_g*10**22.0)/7.5e+7
-    ff            = fcii_DB(n, Z, UU, column_density, 100., 1e+4)
-    SS_CII        = ff*2.474e+9
+    n                   = 10**logn
+    UU , column_density = compute_U_and_N(Z=Z,k=k,Sigma_sfr=Sigma_sfr)
+    ff                  = fcii_DB(n, Z, UU, column_density, 100., 1e+4)
+    SS_CII              = ff*2.474e+9
     return SS_CII
 
 def sigma_cii_IB_N0(logn, Z, k, Sigma_sfr):
     n             = 10**logn
-    SS_g          = Sigmag_of_Sigmasfr(Sigma_sfr, k)
-    UU            = U_Sigmag_Sigmasfr(Sigma_sfr, SS_g)
-    column_density= (SS_g*10**22.0)/7.5e+7
+    UU , column_density = compute_U_and_N(Z=Z,k=k,Sigma_sfr=Sigma_sfr)
     ff            = fcii_IB_N0(n, Z, UU, column_density, 100., 1e+4)
     SS_CII        = ff*2.474e+9
     return SS_CII
 
 def sigma_cii_IB_NF(logn, Z, k, Sigma_sfr):
     n             = 10**logn
-    SS_g          = Sigmag_of_Sigmasfr(Sigma_sfr, k)
-    UU            = U_Sigmag_Sigmasfr(Sigma_sfr, SS_g)
-    column_density= (SS_g*10**22.0)/7.5e+7
+    UU , column_density = compute_U_and_N(Z=Z,k=k,Sigma_sfr=Sigma_sfr)
     ff            = fcii_IB_NF(n, Z, UU, column_density, 100., 1e+4)
     SS_CII        = ff*2.474e+9
     return SS_CII
@@ -145,11 +150,9 @@ def sigma_cii_IB_NF(logn, Z, k, Sigma_sfr):
 # Eq. 35 in Ferrara et al. 2019
 def Sigma_CII158(logn, Z, k, Sigma_sfr):
     
-    SS_g           = Sigmag_of_Sigmasfr(Sigma_sfr, k)
-    UU             = U_Sigmag_Sigmasfr(Sigma_sfr, SS_g)
-    column_density = (SS_g*10**22.0)/7.5e+7
-    N_i            = Ni(UU,Z)
-    N_F            = NF(UU,Z)
+    UU , column_density = compute_U_and_N(Z=Z,k=k,Sigma_sfr=Sigma_sfr)
+    N_i                 = Ni(UU,Z)
+    N_F                 = NF(UU,Z)
     
     if(column_density<N_i):
          out = sigma_cii_DB(logn, Z, k, Sigma_sfr)
@@ -190,19 +193,18 @@ def foiii52(n, Z, U, THII):
     return foiii_ionized 
 
 def Sigma_OIII88(logn, Z, k, Sigma_sfr):
-    n    = 10**logn
-    SS_g = Sigmag_of_Sigmasfr(Sigma_sfr, k)
-    UU   = U_Sigmag_Sigmasfr(Sigma_sfr, SS_g)
-    ff   = foiii88(n, Z, UU, 1e+4)
-    out  = ff*2.474e+9 # 
+    n       = 10**logn
+    UU , __ =  compute_U_and_N(Z=Z,k=k,Sigma_sfr=Sigma_sfr)
+    ff      = foiii88(n, Z, UU, 1e+4)
+    out     = ff*2.474e+9 # 
     return out
 
 def Sigma_OIII52(logn, Z, k, Sigma_sfr):
-    n    = 10**logn
-    SS_g = Sigmag_of_Sigmasfr(Sigma_sfr, k)
-    UU   = U_Sigmag_Sigmasfr(Sigma_sfr, SS_g)
-    ff   = foiii52(n, Z, UU, 1e+4)
-    out  = ff*2.474e+9
+    n       = 10**logn
+    UU , __ =  compute_U_and_N(Z=Z,k=k,Sigma_sfr=Sigma_sfr)
+
+    ff      = foiii52(n, Z, UU, 1e+4)
+    out     = ff*2.474e+9
     return out
 
 def Delta(logn, Z, k, Sigma_sfr):
