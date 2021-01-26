@@ -10,9 +10,9 @@ Details on the equations, and the rationale behind the implemention of this meth
 
 # The repository contains the following files:
 
-- <b> analytical_equation.py </b> gathers all the analytical equations for the calculation of the [CII] and [OIII] surface brightnesses. Requires Pyneb.
-- <b> MCMC_routines.py </b> gathers all the routines related to the implementation of the Markov Chain Monte Carlo algorithm brightnesses.
-- <b> ExampleNotebook.ipynb </b>, a Jupyter notebook exemplifying how to use the analytical equations, run the MCMC model, and plot the results.
+- <b> cooling_rates.py, emission_models.py, empirical.py, ion_structure.py </b> gathers all the analytical equations (mostly from Ferrara et al. 2019) for the calculation of the [CII] and [OIII] surface brightnesses. Requires Pyneb.
+- <b> MCMC_routines.py </b> gathers all the routines related to the implementation of the Markov Chain Monte Carlo algorithm.
+- <b> ExampleNotebook.ipynb </b>, a Jupyter notebook exemplifying how to provide you input data, run the MCMC model, and plot the resulting likelihood distribution for the gas density, gas metallicity, and deviation from the Kennicutt-Schmidt relation.
 
 # Requirements
-The modules require numpy, Pyneb, emcee, corner, matplotlib, scipy and other standard python libraries.
+The modules **require*** numpy, <a href="https://github.com/Morisset/PyNeb_devel">Pyneb</a>, emcee, corner, matplotlib, scipy.
