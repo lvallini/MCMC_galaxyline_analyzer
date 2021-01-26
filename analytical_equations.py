@@ -166,7 +166,6 @@ def fcii_IB_NF(n, Z, U, column, TPDR, THII):
         lambdaCII    = lambdaCIIh(TPDR)
         lambdaCII4   = lambdaCIIe(THII)
 
-
         # cii from neutral
         fcii_neutral = n*carbon_abundance(Z)*lambdaCII*(N_F - N_i)
     
