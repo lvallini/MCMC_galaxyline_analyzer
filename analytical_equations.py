@@ -2,6 +2,7 @@ import numpy as np
 import scipy
 import pyneb as pn
 from ion_structure import Ni,NF,NHIyi
+from cooling_rates import lambdaCIIh,lambdaCIIe
 
 O3 = pn.Atom('O', 3) #load the OIII ion from pyneb
 
@@ -17,20 +18,6 @@ def carbon_abundance(Z):
     Ac=2.7e-4 
     return Ac*Z
      
-# Maxwellian-averaged collision rates with neutrals (Appendix A, Ferrara et al. 2019) 
-#using expression from Goldsmith et al. 2012. Temperature in Kelvin
-def lambdaCIIh(T):
-    factor=(1.84e-4*(T)**0.64)/2.0
-    out = (8.6293e-6/np.sqrt(T))*factor*(1.602e-12*0.0079)*np.exp((-1.602e-12*0.0079)/(1.38065e-16*T))
-    return out
-
-# Maxwellian-averaged collision rates with e- (Appendix A, Ferrara et al. 2019) 
-#using expression from Goldsmith et al. 2012. Temperature in Kelvin
-def lambdaCIIe(T):
-    factor=(0.67*(T)**0.13)/2.0
-    out = (8.6293e-6/np.sqrt(T))*factor*(1.602e-12*0.0079)*np.exp((-1.602e-12*0.0079)/(1.38065e-16*T))
-    return out
-
 # Gas surface density from the SFR surface density assuming the Kennicutt-Schmidt relation. 
 #Sigma_sfr in Msun/yr/kpc^2, k is the burstiness parameter
 def Sigmag_of_Sigmasfr(Sigma_sfr, k, n=1.4):
