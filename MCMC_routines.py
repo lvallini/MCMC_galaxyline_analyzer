@@ -37,7 +37,7 @@ class galaxy_template:
       return y, yerr, par
 
   def Deltagalaxy(self):
-      from analytical_equations import delooze_fit_resolved
+      from empirical import delooze_fit_resolved
 
       out = np.log10(self.Sigma_CII) - np.log10(delooze_fit_resolved(self.Sigma_SFR))
 

@@ -277,17 +277,10 @@ def Sigma_OIII52(logn, Z, k, Sigma_sfr):
     out=ff*2.474e+9
     return out
 
-def delooze_fit(logsfr):
-    return (logsfr + 7.06)/1.0
-
-def delooze_fit_resolved(Sigma_sfr):
-    logSigma_cii=(np.log10(Sigma_sfr) +6.99)/0.93
-    return 10**logSigma_cii
-
-def delooze_delta(Sigma_sfr,Sigma_cii):
-    return np.log10(Sigma_cii) - np.log10(delooze_fit_resolved(Sigma_sfr))
-
 def Delta(logn, Z, k, Sigma_sfr):
+
+    from empirical import delooze_fit_resolved
+    
     out = np.log10(Sigma_CII158(logn, Z, k, Sigma_sfr))-np.log10(delooze_fit_resolved(Sigma_sfr))
     return out
 
