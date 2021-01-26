@@ -38,7 +38,8 @@ class galaxy_template:
 
   def Deltagalaxy(self):
       from analytical_equations import delooze_fit_resolved
-      out = np.log10(self.Sigma_CII) -np.log10(delooze_fit_resolved(self.Sigma_SFR))
+
+      out = np.log10(self.Sigma_CII) - np.log10(delooze_fit_resolved(self.Sigma_SFR))
 
       return out
 
@@ -105,8 +106,31 @@ class MC_model:
 
        self.set_mc_parameters(n_walkers=n_walkers,steps=steps,burn_in=burn_in)
 
+    def check_consistency(self):
+
+        # check the priors
+        ok_priors =               self.lognMIN < self.lognMAX
+        ok_priors = ok_priors and self.logkMIN < self.logkMAX
+        ok_priors = ok_priors and self.logZMIN < self.logZMAX
+        if not ok_priors:
+            print("Priors look funky, i.e. min >= max for some of them")
+
+        ok_init = self.check_bounds(theta=tuple([self.logn0,self.logZ0,self.logk0]))
+        if not ok_init:
+            print("Initial position of the walkers is out of the priors")
+
+        ok_data = isinstance(self.galaxy_data,galaxy_template)
+        if not ok_data:
+            print("galaxy data is not a galaxy_template() class")
+
+        return ok_priors and ok_init and ok_data
 
     def run_model(self,verbose=True):
+
+        ok = self.check_consistency()
+        if not ok:
+            print("Problem in the initialization, aborting")
+        assert ok
 
         if verbose:
           print("about to run")
@@ -114,17 +138,16 @@ class MC_model:
           print("galaxy data")
           self.galaxy_data.print_info()
 
+        # get galaxy data in the format for the MCMC
         y, yerr, par   = self.galaxy_data.data_for_MCMC()
 
         # init walkers
-        ok = self.check_bounds(theta=tuple([self.logn0,self.logZ0,self.logk0]))
-        if not ok:
-            print("Initial position of the walkers is out of the priors")
-        assert ok
         starting_point = [self.logn0, self.logZ0, self.logk0]
         pos            = [starting_point + 1e-5*np.random.randn(self.n_dim) for i in range(self.n_walkers)]
 
+        # set the emcee
         sampler        = emcee.EnsembleSampler(self.n_walkers, self.n_dim, self.lnprob, args=(y, yerr, par))
+        # run the thing
         sampler.run_mcmc(pos, self.steps, progress=True)
         tau            = sampler.get_autocorr_time(quiet=True)
         flat_samples   = sampler.get_chain(discard=self.burn_in, flat=True)
@@ -152,12 +175,7 @@ class MC_model:
        self.logZMIN = logZMIN   # 
        self.logZMAX = logZMAX   # maximum log metallicity [Zsun]
 
-       assert self.lognMIN < self.lognMAX
-       assert self.logkMIN < self.logkMAX
-       assert self.logZMIN < self.logZMAX
-
     def set_galaxy_data(self,galaxy_data = None):
-        assert isinstance(galaxy_data,galaxy_template)
         self.galaxy_data = galaxy_data
 
     def set_walkers(self,logn0=2.0, logZ0=-0.5, logk0 = 0.3):
@@ -190,8 +208,9 @@ class MC_model:
     def model(self,theta, ssfr):
 
        logn, logZ, logk  = theta
+
        delta_galaxy      = eqs.Delta(logn=logn    , Z=10**logZ, k=10**logk, Sigma_sfr=ssfr)
-       sigma_cii_galaxy  = eqs.sigma_cii(logn=logn, Z=10**logZ, k=10**logk, Sigma_sfr=ssfr)
+       sigma_cii_galaxy  = eqs.Sigma_CII158(logn=logn, Z=10**logZ, k=10**logk, Sigma_sfr=ssfr)
        sigma_oiii_galaxy = eqs.Sigma_OIII88(logn=logn, Z=10**logZ, k=10**logk, Sigma_sfr=ssfr)
        
        return delta_galaxy,sigma_cii_galaxy,sigma_oiii_galaxy
