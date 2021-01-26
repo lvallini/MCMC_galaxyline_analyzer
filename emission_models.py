@@ -58,24 +58,26 @@ def compute_U_and_N(Z,k,Sigma_sfr,ks_fit=1.4 ):
     return ionization_parameter,column_density 
 
 
-def fcii_DB(n, Z, U, column,  TPDR=100.0, THII=1.e+4):
+def compute_flux_cii_density_bound(n, Z, U, column,  TPDR=100.0, THII=1.e+4):
     """
     Emerging [CII] flux for the density bounded case dens bounded case
     Eq. 34 in Ferrara et al. 2019
     """
-    from atomic_data import g2_cii,g1_cii,E12_158um,A21_158um,ev2erg
+    from atomic_data import g2_cii,g1_cii,E12_158um,A21_158um,ev2erg,n_crit_CII
 
-    fcii_neutral    = 0.0
+    # column density in the density bound case
+    N_HIy0 = compute_NHIy0(U, Z)
 
-    if(n<=3300):
-        # rates:  
-        lambdaCII4      = compute_lambda_CII_e(T=THII)
-        fcii_ionized_DB = n*carbon_abundance(Z)*lambdaCII4*compute_NHIy0(U, Z, column)
+    column_neutral = column - N_i
+    column_ionized = N_HIy0
+
+    # compute the cooling contributions with and without LTE approximation
+    if(n<=n_crit_CII):
+        cooling_ionized    = n*compute_lambda_CII_e(T=THII)
     else:
-        LTE_pop_levels_HII = (g2_cii/g1_cii) * pop_LTE(T_in=THII,E_in=E12_158um)
-        fcii_ionized_DB    = LTE_pop_levels_HII * carbon_abundance(Z) * A21_158um * (ev2erg*E12_158um)* compute_NHIy0(U, Z, column)
-        
-    out = fcii_neutral + fcii_ionized_DB
+        cooling_ionized    = (g2_cii/g1_cii)*pop_LTE(T_in=THII,E_in=E12_158um)*A21_158um*(ev2erg*E12_158um)
+
+    out = carbon_abundance(Z)*(column_ionized*cooling_ionized)
 
     return out
 
@@ -94,67 +96,62 @@ def pop_LTE(T_in,E_in):
 
     return out
 
-def fcii_IB_N0(n, Z, U, column, TPDR=100.0, THII=1.e+4):
+def compute_flux_cii_ionization_bound_N0(n, Z, U, column, TPDR=100.0, THII=1.e+4):
+
     """
     Emerging [CII] flux in the ionization bounded case, and for NF> N0
     Equations 30, 31 in Ferrara et al. 2019
     """
 
-    from atomic_data import g2_cii,g1_cii,E12_158um,A21_158um,ev2erg
+    from atomic_data import g2_cii,g1_cii,E12_158um,A21_158um,ev2erg,n_crit_CII
 
     # ionized column density
     N_i= compute_Ni(U,Z)
-    
-    if(n<=3300):
-        # rates:  
-        lambdaCII    = compute_lambda_CII_h(T=TPDR)
-        lambdaCII4   = compute_lambda_CII_e(T=THII)
+    # neutral column density in the ionized layer
+    N_HIyi = compute_NHIyi(U, Z)
 
-        # cii from neutral
-        fcii_neutral    = n*carbon_abundance(Z)*lambdaCII*(column - N_i)
-        # cii from ionized layer
-        fcii_ionized_IB = n*carbon_abundance(Z)*lambdaCII4*compute_NHIyi(U, Z)
-    
+    column_neutral = column - N_i
+    column_ionized = N_HIyi
+
+    # compute the cooling contributions with and without LTE approximation
+    if(n<=n_crit_CII):
+        cooling_neutral    = n*compute_lambda_CII_h(T=TPDR)
+        cooling_ionized    = n*compute_lambda_CII_e(T=THII)
     else:
-        LTE_pop_levels_PDR = (g2_cii/g1_cii)*pop_LTE(T_in=TPDR,E_in=E12_158um)
-        LTE_pop_levels_HII = (g2_cii/g1_cii)*pop_LTE(T_in=THII,E_in=E12_158um)
-        #
-        fcii_neutral       = LTE_pop_levels_PDR * carbon_abundance(Z) * A21_158um * (ev2erg*E12_158um)* (column - N_i)
-        fcii_ionized_IB    = LTE_pop_levels_HII * carbon_abundance(Z) * A21_158um * (ev2erg*E12_158um)* compute_NHIyi(U, Z)
+        cooling_neutral    = (g2_cii/g1_cii)*pop_LTE(T_in=TPDR,E_in=E12_158um)*A21_158um*(ev2erg*E12_158um)
+        cooling_ionized    = (g2_cii/g1_cii)*pop_LTE(T_in=THII,E_in=E12_158um)*A21_158um*(ev2erg*E12_158um)
 
-    out             = fcii_neutral + fcii_ionized_IB
+    out = carbon_abundance(Z)*( column_neutral*cooling_neutral + column_ionized*cooling_ionized)
 
     return out
 
-def fcii_IB_NF(n, Z, U, column, TPDR=100.0, THII=1.e+4):
+def compute_flux_cii_ionization_bound_NF(n, Z, U, column, TPDR=100.0, THII=1.e+4):
     """
     Emerging [CII] flux in the ionization bounded case, and for NF< N0
     Equations 30, 32 in Ferrara et al. 2019
     """
 
-    from atomic_data import g2_cii,g1_cii,E12_158um,A21_158um,ev2erg
+    from atomic_data import g2_cii,g1_cii,E12_158um,A21_158um,ev2erg,n_crit_CII
 
     # ionized column density
-    N_i= compute_Ni(U,Z)
+    N_i    = compute_Ni(U,Z)
     # NL column density
-    N_F=compute_NF(U, Z)
-    
-    if(n<=3300):
-        # rates:  
-        lambdaCII    = compute_lambda_CII_h(T=TPDR)
-        lambdaCII4   = compute_lambda_CII_e(T=THII)
-        # cii from neutral
-        fcii_neutral = n*carbon_abundance(Z)*lambdaCII*(N_F - N_i)
-        # cii from ionized layer
-        fcii_ionized_IB=n*carbon_abundance(Z)*lambdaCII4*compute_NHIyi(U, Z)
-        
-    else:
-        LTE_pop_levels_PDR = (g2_cii/g1_cii)*pop_LTE(T_in=TPDR,E_in=E12_158um)
-        LTE_pop_levels_HII = (g2_cii/g1_cii)*pop_LTE(T_in=THII,E_in=E12_158um)
-        fcii_neutral       = LTE_pop_levels_PDR * carbon_abundance(Z) * A21_158um * (ev2erg*E12_158um)* (N_F - N_i)
-        fcii_ionized_IB    = LTE_pop_levels_HII * carbon_abundance(Z) * A21_158um * (ev2erg*E12_158um)* compute_NHIyi(U, Z)
+    N_F    = compute_NF(U, Z)
+    # neutral column density in the ionized layer
+    N_HIyi = compute_NHIyi(U, Z)
 
-    out= fcii_neutral + fcii_ionized_IB
+    column_neutral = N_F - N_i
+    column_ionized = N_HIyi
+
+    # compute the cooling contributions with and without LTE approximation
+    if(n<=n_crit_CII):
+        cooling_neutral    = n*compute_lambda_CII_h(T=TPDR)
+        cooling_ionized    = n*compute_lambda_CII_e(T=THII)
+    else:
+        cooling_neutral    = (g2_cii/g1_cii)*pop_LTE(T_in=TPDR,E_in=E12_158um)*A21_158um*(ev2erg*E12_158um)
+        cooling_ionized    = (g2_cii/g1_cii)*pop_LTE(T_in=THII,E_in=E12_158um)*A21_158um*(ev2erg*E12_158um)
+
+    out = carbon_abundance(Z)*( column_neutral*cooling_neutral + column_ionized*cooling_ionized)
         
     return out
 
@@ -171,11 +168,11 @@ def Sigma_CII158(logn, Z, k, Sigma_sfr):
     n                   = 10**logn
 
     if(column_density<N_i):
-         flux = fcii_DB(n = n, Z= Z, U = UU, column=column_density   , TPDR=100.0, THII=1e+4)
+         flux = compute_flux_cii_density_bound(n = n, Z= Z, U = UU, column=column_density   , TPDR=100.0, THII=1e+4)
     elif(column_density<N_F):
-         flux = fcii_IB_N0(n = n, Z= Z, U = UU, column=column_density, TPDR=100.0, THII=1e+4)
+         flux = compute_flux_cii_ionization_bound_N0(n = n, Z= Z, U = UU, column=column_density, TPDR=100.0, THII=1e+4)
     else:
-         flux = fcii_IB_NF(n = n, Z= Z, U = UU, column=column_density, TPDR=100.0, THII=1e+4)
+         flux = compute_flux_cii_ionization_bound_NF(n = n, Z= Z, U = UU, column=column_density, TPDR=100.0, THII=1e+4)
 
     # flux to surface brightness conversion
     out = flux*2.474e+9
