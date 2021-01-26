@@ -22,15 +22,16 @@ def carbon_abundance(Z):
     Ac = 2.7e-4 
     return Ac*Z
    
-def Sigmag_of_Sigmasfr(Sigma_sfr, k, ks_fit=1.4):
+def compute_sigmag(Sigma_sfr, k, ks_fit=1.4):
     """
-    Gas surface density from the SFR surface density assuming the Kennicutt-Schmidt relation. 
-    Sigma_sfr in Msun/yr/kpc^2, k is the burstiness parameter
+    Gas surface density from the SFR surface density assuming modified Kennicutt-Schmidt relation. 
+    Sigma_sfr in Msun/yr/kpc^2
+    k is the burstiness parameter
     """
     out=(((k*(10.0**-12))**-1)*Sigma_sfr)**(1./ks_fit)
     return out
 
-def U_Sigmag_Sigmasfr(Sigma_sfr, Sigma_g):
+def compute_U(Sigma_sfr, Sigma_g):
     """
     Ionizaton parameter as a function of star formation and gas surface densities. 
     reference:
@@ -49,11 +50,11 @@ def compute_U_and_N(Z,k,Sigma_sfr,ks_fit=1.4 ):
     """
 
     # the gas surface density is computed from the modified SK
-    surface_density_gas = Sigmag_of_Sigmasfr(Sigma_sfr=Sigma_sfr, k=k,ks_fit=ks_fit)
+    surface_density_gas = compute_sigmag(Sigma_sfr=Sigma_sfr, k=k,ks_fit=ks_fit)
     # convert the gas surface density to a column density
     column_density      = (surface_density_gas*10**22.0)/7.5e+7
     # compute the ionization parameter
-    ionization_parameter= U_Sigmag_Sigmasfr(Sigma_sfr=Sigma_sfr, Sigma_g = surface_density_gas)
+    ionization_parameter= compute_U(Sigma_sfr=Sigma_sfr, Sigma_g = surface_density_gas)
 
     return ionization_parameter,column_density 
 
@@ -66,7 +67,7 @@ def compute_flux_cii_density_bound(n, Z, U, column,  TPDR=100.0, THII=1.e+4):
     from atomic_data import g2_cii,g1_cii,E12_158um,A21_158um,ev2erg,n_crit_CII
 
     # column density in the density bound case
-    N_HIy0 = compute_NHIy0(U, Z)
+    N_HIy0 = compute_NHIy0(U, Z,column)
 
     column_neutral = column - N_i
     column_ionized = N_HIy0
@@ -179,7 +180,7 @@ def Sigma_CII158(logn, Z, k, Sigma_sfr):
 
     return out
 
-def foiii(n, Z, U, THII,line="88um"):
+def compute_flux_oiii(n, Z, U, THII,line="88um"):
 
     """
     flux for the [OIII] line emission (88 and 52 micron), 
@@ -208,13 +209,13 @@ def foiii(n, Z, U, THII,line="88um"):
 
 def Sigma_OIII88(logn, Z, k, Sigma_sfr):
     UU , __ =  compute_U_and_N(Z=Z,k=k,Sigma_sfr=Sigma_sfr)
-    ff      = foiii(n=10.0**logn, Z=Z, U=UU, THII=1e+4,line="88um")
+    ff      = compute_flux_oiii(n=10.0**logn, Z=Z, U=UU, THII=1e+4,line="88um")
     out     = ff*2.474e+9 # 
     return out
 
 def Sigma_OIII52(logn, Z, k, Sigma_sfr):
     UU , __ =  compute_U_and_N(Z=Z,k=k,Sigma_sfr=Sigma_sfr)
-    ff      = foiii(n=10.0**logn, Z=Z, U=UU, THII=1e+4,line="52um")
+    ff      = compute_flux_foiii(n=10.0**logn, Z=Z, U=UU, THII=1e+4,line="52um")
     out     = ff*2.474e+9
     return out
 
