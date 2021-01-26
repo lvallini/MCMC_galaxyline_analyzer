@@ -2,7 +2,7 @@ import numpy as np
 import scipy
 import pyneb as pn
 from ion_structure import Ni,NF,NHIyi,NHIy0
-from cooling_rates import lambdaCIIh,lambdaCIIe
+from cooling_rates import compute_lambda_CII_h,compute_lambda_CII_e
 
 O3 = pn.Atom('O', 3) #load the OIII ion from pyneb
 
@@ -69,7 +69,7 @@ def fcii_DB(n, Z, U, column,  TPDR=100.0, THII=1.e+4):
 
     if(n<=3300):
         # rates:  
-        lambdaCII4   = lambdaCIIe(THII)
+        lambdaCII4      = compute_lambda_CII_e(T=THII)
         fcii_ionized_DB = n*carbon_abundance(Z)*lambdaCII4*NHIy0(U, Z, column)
     else:
         LTE_pop_levels_HII = (g2_cii/g1_cii) * pop_LTE(T_in=THII,E_in=E12_158um)
@@ -107,8 +107,8 @@ def fcii_IB_N0(n, Z, U, column, TPDR=100.0, THII=1.e+4):
     
     if(n<=3300):
         # rates:  
-        lambdaCII    = lambdaCIIh(TPDR)
-        lambdaCII4   = lambdaCIIe(THII)
+        lambdaCII    = compute_lambda_CII_h(T=TPDR)
+        lambdaCII4   = compute_lambda_CII_e(T=THII)
 
         # cii from neutral
         fcii_neutral    = n*carbon_abundance(Z)*lambdaCII*(column - N_i)
@@ -141,8 +141,8 @@ def fcii_IB_NF(n, Z, U, column, TPDR=100.0, THII=1.e+4):
     
     if(n<=3300):
         # rates:  
-        lambdaCII    = lambdaCIIh(TPDR)
-        lambdaCII4   = lambdaCIIe(THII)
+        lambdaCII    = compute_lambda_CII_h(T=TPDR)
+        lambdaCII4   = compute_lambda_CII_e(T=THII)
         # cii from neutral
         fcii_neutral = n*carbon_abundance(Z)*lambdaCII*(N_F - N_i)
         # cii from ionized layer

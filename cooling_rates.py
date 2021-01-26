@@ -8,7 +8,7 @@ import numpy as np
       T, the temperature in K
 """
 
-def lambdaCIIh(T):
+def compute_lambda_CII_h(T):
     
     """
     Maxwellian-averaged collision rates with neutrals
@@ -21,7 +21,7 @@ def lambdaCIIh(T):
 
     return out
 
-def lambdaCIIe(T):
+def compute_lambda_CII_e(T):
     """
     Maxwellian-averaged collision rates with e-
     using expression from Goldsmith et al. 2012.
