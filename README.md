@@ -41,7 +41,7 @@ archivePrefix = {arXiv},
        adsurl = {https://ui.adsabs.harvard.edu/abs/2019MNRAS.489....1F}}
 ```
 ```bibtex
-@ARTICLE{2020MNRAS.495L..22V,
+@ARTICLE{Vallini:2020,
        author = {{Vallini}, L. and {Ferrara}, A. and {Pallottini}, A. and {Carniani}, S. and {Gallerani}, S.},
         title = "{Star formation law in the epoch of reionization from [C II] and C III] lines}",
       journal = {\mnras},
