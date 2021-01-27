@@ -40,7 +40,8 @@ archivePrefix = {arXiv},
        eprint = {1908.07536},
  primaryClass = {astro-ph.GA},
        adsurl = {https://ui.adsabs.harvard.edu/abs/2019MNRAS.489....1F},
-   }</span></code></pre>
+   }</span></code>
+</pre>
 
 <pre><code><span>@ARTICLE{2020MNRAS.495L..22V,
        author = <span>{</span> {Vallini}, L. and {Ferrara}, A. and {Pallottini}, A. and {Carniani}, S. and {Gallerani}, S.},
