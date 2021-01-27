@@ -24,10 +24,21 @@ The modules **require** numpy, scipy, matplotlb, <a href="https://github.com/Mor
 
 # Acknowledging this code in Scientific Publications
 
-   @misc{pynbody,
-     author = {{Pontzen}, A. and {Ro{\v s}kar}, R. and {Stinson}, G.~S. and {Woods},
-        R. and {Reed}, D.~M. and {Coles}, J. and {Quinn}, T.~R.},
-     title = "{pynbody: Astrophysics Simulation Analysis for Python}",
-     note = {Astrophysics Source Code Library, ascl:1305.002},
-     year = 2013
-   }
+```
+@ARTICLE{2019MNRAS.489....1F,
+       author = {{Ferrara}, A. and {Vallini}, L. and {Pallottini}, A. and {Gallerani}, S. and {Carniani}, S. and {Kohandel}, M. and {Decataldo}, D. and {Behrens}, C.},
+        title = "{A physical model for [C II] line emission from galaxies}",
+      journal = {\mnras},
+         year = 2019,
+        month = oct,
+       volume = {489},
+       number = {1},
+        pages = {1-12},
+          doi = {10.1093/mnras/stz2031},
+archivePrefix = {arXiv},
+       eprint = {1908.07536},
+ primaryClass = {astro-ph.GA},
+       adsurl = {https://ui.adsabs.harvard.edu/abs/2019MNRAS.489....1F},
+}
+```
+
