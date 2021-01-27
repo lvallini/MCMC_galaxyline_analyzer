@@ -68,4 +68,4 @@ archivePrefix = {arXiv},
 
 ## Funding
 This work has received funding by the ERC
-![image](https://www.seekpng.com/png/detail/770-7706112_eu-flag-and-erc-logo-european-research-council.png)
+![ERCimage](https://erc.europa.eu/sites/default/files/banner_news_logo.jpg)
