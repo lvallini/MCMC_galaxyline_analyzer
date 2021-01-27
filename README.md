@@ -22,7 +22,7 @@ You can clone (or download) the entire repository and try the model with input d
 The modules **require** numpy, scipy, matplotlb, <a href="https://github.com/Morisset/PyNeb_devel">Pyneb</a>, 
 <a href='https://emcee.readthedocs.io/en/stable'>emcee</a>,  <a href="https://corner.readthedocs.io/en/latest/index.html">corner</a>.
 
-## Acknowledging this code in Scientific Publications
+### Acknowledging this code in Scientific Publications
 ```bibtex
 @ARTICLE{Ferrara:2019,
        author = {{Ferrara}, A. and {Vallini}, L. and {Pallottini}, A. and {Gallerani}, S. and {Carniani}, S.
