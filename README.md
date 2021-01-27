@@ -67,5 +67,5 @@ archivePrefix = {arXiv},
 </div>
 
 ## Funding
-This work has received funding by ERC ![alt text](https://erc.europa.eu/sites/default/files/LOGO_ERC.png)
+This work has received funding by ERC ![alt text](https://erc.europa.eu/sites/default/files/LOGO_ERC.png =250x250)
 
