@@ -16,7 +16,7 @@ Details on the rationale behind the model implemention and on the equations are 
 
 - <b> MCMC_routines.py </b> gathers all the routines related to the implementation of the Markov Chain Monte Carlo algorithm.
 
-You can clone (or download) the entire repository to start immediately useing the model by yourself. You can set input data and priors of your choice.
+You can clone (or download) the entire repository and try the model with input data and priors of your choice.
 
 # Requirements
 The modules **require** numpy, scipy, matplotlb, <a href="https://github.com/Morisset/PyNeb_devel">Pyneb</a>, 
