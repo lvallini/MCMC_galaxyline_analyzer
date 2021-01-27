@@ -23,7 +23,15 @@ The modules **require** numpy, scipy, matplotlb, <a href="https://github.com/Mor
 <a href='https://emcee.readthedocs.io/en/stable'>emcee</a>,  <a href="https://corner.readthedocs.io/en/latest/index.html">corner</a>.
 
 ## Acknowledging this code in Scientific Publications
+BibTex::
 
+   @misc{pynbody,
+     author = {{Pontzen}, A. and {Ro{\v s}kar}, R. and {Stinson}, G.~S. and {Woods},
+        R. and {Reed}, D.~M. and {Coles}, J. and {Quinn}, T.~R.},
+     title = "{pynbody: Astrophysics Simulation Analysis for Python}",
+     note = {Astrophysics Source Code Library, ascl:1305.002},
+     year = 2013
+   }
 ```bibtex
 @ARTICLE{Ferrara:2019,
        author = {{Ferrara}, A. and {Vallini}, L. and {Pallottini}, A. and {Gallerani}, S. and {Carniani}, S.
