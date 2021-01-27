@@ -25,8 +25,9 @@ The modules **require** numpy, scipy, matplotlb, <a href="https://github.com/Mor
 # Acknowledging this code in Scientific Publications
 
 ```bibtex
-@ARTICLE{2019MNRAS.489....1F,
-       author = {{Ferrara}, A. and {Vallini}, L. and {Pallottini}, A. and {Gallerani}, S. and {Carniani}, S. and {Kohandel}, M. and {Decataldo}, D. and {Behrens}, C.},
+@ARTICLE{Ferrara:2019,
+       author = {{Ferrara}, A. and {Vallini}, L. and {Pallottini}, A. and {Gallerani}, S. and {Carniani}, S.
+                 and {Kohandel}, M. and {Decataldo}, D. and {Behrens}, C.},
         title = "{A physical model for [C II] line emission from galaxies}",
       journal = {\mnras},
          year = 2019,
