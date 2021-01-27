@@ -67,5 +67,6 @@ archivePrefix = {arXiv},
 </div>
 
 ## Funding
-This work is supported by the ERC Advanced Grant INTERSTELLAR H2020/740120 (PI: Ferrara). LV has been supported by funding from the European Union’s Horizon 2020 research and innovation program under the Marie Sk lodowska-Curie Grant agreement No. 746119. 
+This work is supported by the ERC Advanced Grant INTERSTELLAR H2020/740120 (PI: Ferrara). 
+Part of the work of LV has been supported by funding from the EU Horizon 2020 research and innovation program under the Marie Sklodowska-Curie Grant agreement No. 746119. 
 <img src="https://erc.europa.eu/sites/default/files/LOGO_ERC-FLAG_EU_.jpg" alt="ERClogo">
