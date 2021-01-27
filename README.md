@@ -14,8 +14,9 @@ Details on the equations, and the rationale behind the implemention of this meth
 
 - <b> MCMC_routines.py </b> gathers all the routines related to the implementation of the Markov Chain Monte Carlo algorithm.
 
-- <b> ExampleNotebook-v2.ipynb</b>, a Jupyter notebook exemplifying how to provide you input data, run the MCMC model, and plot the resulting likelihood distribution for the gas density, gas metallicity, and deviation from the Kennicutt-Schmidt relation.
+- <a href='https://github.com/lvallini/MCMC_galaxyline_analyzer/blob/main/ExampleNotebook-v2.ipynb'> ExampleNotebook-v2.ipynb</a>, a Jupyter Notebook exemplifying how to set your input data, run the MCMC model, and plot the resulting likelihood distribution for the gas density, gas metallicity, and deviation from the Kennicutt-Schmidt relation.
 
 # Requirements
 The modules **require** numpy, scipy, matplotlb, <a href="https://github.com/Morisset/PyNeb_devel">Pyneb</a>, 
 <a href='https://emcee.readthedocs.io/en/stable'>emcee</a>,  <a href="https://corner.readthedocs.io/en/latest/index.html">corner</a>.
+
