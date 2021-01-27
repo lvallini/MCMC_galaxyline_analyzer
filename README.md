@@ -22,10 +22,11 @@ You can clone (or download) the entire repository and try the model with input d
 The modules **require** numpy, scipy, matplotlb, <a href="https://github.com/Morisset/PyNeb_devel">Pyneb</a>, 
 <a href='https://emcee.readthedocs.io/en/stable'>emcee</a>,  <a href="https://corner.readthedocs.io/en/latest/index.html">corner</a>.
 
-### Acknowledging this code in Scientific Publications
-```bibtex
-@ARTICLE{Ferrara:2019,
-       author = {{Ferrara}, A. and {Vallini}, L. and {Pallottini}, A. and {Gallerani}, S. and {Carniani}, S.
+## Acknowledging this code in Scientific Publications
+
+
+<pre><code><span>@ARTICLE{Ferrara:2019,
+       author = <span>{</span> {Ferrara}, A. and {Vallini}, L. and {Pallottini}, A. and {Gallerani}, S. and {Carniani}, S.
                  and {Kohandel}, M. and {Decataldo}, D. and {Behrens}, C.},
         title = "{A physical model for [C II] line emission from galaxies}",
       journal = {\mnras},
@@ -38,11 +39,11 @@ The modules **require** numpy, scipy, matplotlb, <a href="https://github.com/Mor
 archivePrefix = {arXiv},
        eprint = {1908.07536},
  primaryClass = {astro-ph.GA},
-       adsurl = {https://ui.adsabs.harvard.edu/abs/2019MNRAS.489....1F}}
-```
-```bibtex
-@ARTICLE{Vallini:2020,
-       author = {{Vallini}, L. and {Ferrara}, A. and {Pallottini}, A. and {Carniani}, S. and {Gallerani}, S.},
+       adsurl = {https://ui.adsabs.harvard.edu/abs/2019MNRAS.489....1F},
+   }</pre></code></span>
+
+<pre><code><span>@ARTICLE{2020MNRAS.495L..22V,
+       author = <span>{</span> {Vallini}, L. and {Ferrara}, A. and {Pallottini}, A. and {Carniani}, S. and {Gallerani}, S.},
         title = "{Star formation law in the epoch of reionization from [C II] and C III] lines}",
       journal = {\mnras},
      keywords = {photodissociation region (PDR), galaxies: high-redshift, galaxies: ISM, Astrophysics - Astrophysics of Galaxies},
@@ -56,7 +57,7 @@ archivePrefix = {arXiv},
        eprint = {2003.06443},
  primaryClass = {astro-ph.GA},
        adsurl = {https://ui.adsabs.harvard.edu/abs/2020MNRAS.495L..22V},
-      adsnote = {Provided by the SAO/NASA Astrophysics Data System}}
-```
+      adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+}</pre></code></span>
 
 
