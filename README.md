@@ -46,7 +46,7 @@ archivePrefix = {arXiv},
 
 
 <div class="row codice">
-<pre><code><span>@ARTICLE{2020MNRAS.495L..22V,
+<pre><code><span>@ARTICLE{Vallini:2020,
        author = <span>{</span> {Vallini}, L. and {Ferrara}, A. and {Pallottini}, A. and {Carniani}, S. and {Gallerani}, S.},
         title = "{Star formation law in the epoch of reionization from [C II] and C III] lines}",
       journal = {\mnras},
