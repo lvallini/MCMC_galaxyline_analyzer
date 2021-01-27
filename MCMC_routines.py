@@ -94,9 +94,9 @@ class galaxy_template:
       print("  Sigma_CII         = ",self.Sigma_CII , "Lsun/kpc^2")
       print("  Sigma_OIII        = ",self.Sigma_OIII, "Lsun/kpc^2")
       #
-      print("  delta Sigma_SFR   = ",100.0*self.rel_err_Delta ,"%")
-      print("  delta Sigma_CIII  = ",100.0*self.rel_err_Sigma_CII ,"%")
-      print("  delta Sigma_OIII  = ",100.0*self.rel_err_Sigma_OIII ,"%")
+      print("  relative error on Delta       = ",100.0*self.rel_err_Delta ,"%")
+      print("  relative error on Sigma_CIII  = ",100.0*self.rel_err_Sigma_CII ,"%")
+      print("  relative error on Sigma_OIII  = ",100.0*self.rel_err_Sigma_OIII ,"%")
 
 class MC_model:
 
