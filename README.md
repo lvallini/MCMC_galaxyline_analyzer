@@ -23,15 +23,6 @@ The modules **require** numpy, scipy, matplotlb, <a href="https://github.com/Mor
 <a href='https://emcee.readthedocs.io/en/stable'>emcee</a>,  <a href="https://corner.readthedocs.io/en/latest/index.html">corner</a>.
 
 ## Acknowledging this code in Scientific Publications
-BibTex::
-
-   @misc{pynbody,
-     author = {{Pontzen}, A. and {Ro{\v s}kar}, R. and {Stinson}, G.~S. and {Woods},
-        R. and {Reed}, D.~M. and {Coles}, J. and {Quinn}, T.~R.},
-     title = "{pynbody: Astrophysics Simulation Analysis for Python}",
-     note = {Astrophysics Source Code Library, ascl:1305.002},
-     year = 2013
-   }
 ```bibtex
 @ARTICLE{Ferrara:2019,
        author = {{Ferrara}, A. and {Vallini}, L. and {Pallottini}, A. and {Gallerani}, S. and {Carniani}, S.
@@ -47,8 +38,7 @@ BibTex::
 archivePrefix = {arXiv},
        eprint = {1908.07536},
  primaryClass = {astro-ph.GA},
-       adsurl = {https://ui.adsabs.harvard.edu/abs/2019MNRAS.489....1F},
-}
+       adsurl = {https://ui.adsabs.harvard.edu/abs/2019MNRAS.489....1F}}
 ```
 ```bibtex
 @ARTICLE{2020MNRAS.495L..22V,
@@ -66,8 +56,7 @@ archivePrefix = {arXiv},
        eprint = {2003.06443},
  primaryClass = {astro-ph.GA},
        adsurl = {https://ui.adsabs.harvard.edu/abs/2020MNRAS.495L..22V},
-      adsnote = {Provided by the SAO/NASA Astrophysics Data System}
-}
+      adsnote = {Provided by the SAO/NASA Astrophysics Data System}}
 ```
 
 
