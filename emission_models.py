@@ -61,7 +61,7 @@ def compute_U_and_N(Z,k,Sigma_sfr,ks_fit=1.4 ):
 
 def compute_flux_cii_density_bound(n, Z, U, column,  TPDR=100.0, THII=1.e+4):
     """
-    Emerging [CII] flux for the density bounded case dens bounded case
+    Emerging [CII] flux for the density bounded case
     Eq. 34 in Ferrara et al. 2019
     """
     from atomic_data import g2_cii,g1_cii,E12_158um,A21_158um,ev2erg,n_crit_CII
@@ -69,7 +69,6 @@ def compute_flux_cii_density_bound(n, Z, U, column,  TPDR=100.0, THII=1.e+4):
     # column density in the density bound case
     N_HIy0 = compute_NHIy0(U, Z,column)
 
-    column_neutral = column - N_i
     column_ionized = N_HIy0
 
     # compute the cooling contributions with and without LTE approximation
