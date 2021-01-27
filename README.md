@@ -24,7 +24,7 @@ The modules **require** numpy, scipy, matplotlb, <a href="https://github.com/Mor
 
 ## Acknowledging this code in Scientific Publications
 
-
+<div class="row codice">
 <pre><code><span>@ARTICLE{Ferrara:2019,
        author = <span>{</span> {Ferrara}, A. and {Vallini}, L. and {Pallottini}, A. and {Gallerani}, S. and {Carniani}, S.
                  and {Kohandel}, M. and {Decataldo}, D. and {Behrens}, C.},
@@ -42,7 +42,10 @@ archivePrefix = {arXiv},
        adsurl = {https://ui.adsabs.harvard.edu/abs/2019MNRAS.489....1F},
    }</span></code>
 </pre>
+</div>
 
+
+<div class="row codice">
 <pre><code><span>@ARTICLE{2020MNRAS.495L..22V,
        author = <span>{</span> {Vallini}, L. and {Ferrara}, A. and {Pallottini}, A. and {Carniani}, S. and {Gallerani}, S.},
         title = "{Star formation law in the epoch of reionization from [C II] and C III] lines}",
@@ -59,6 +62,8 @@ archivePrefix = {arXiv},
  primaryClass = {astro-ph.GA},
        adsurl = {https://ui.adsabs.harvard.edu/abs/2020MNRAS.495L..22V},
       adsnote = {Provided by the SAO/NASA Astrophysics Data System}
-}</span></code></pre>
+}</span>
+</code></pre>
+</div>
 
 
