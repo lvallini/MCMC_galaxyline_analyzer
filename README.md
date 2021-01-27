@@ -68,4 +68,4 @@ archivePrefix = {arXiv},
 
 ## Funding
 This work has received funding by the ERC
-<img src="https://erc.europa.eu/sites/default/files/banner_news_logo.jpg" width="200" height="40" alt="ERClogo">
+<img src="https://p7.hiclipart.com/preview/510/516/838/european-research-council-french-institute-for-research-in-computer-science-and-automation-university-of-paris-saclay-dan-zhang.jpg" width="400" height="400" alt="ERClogo">
