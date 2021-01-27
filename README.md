@@ -67,5 +67,5 @@ archivePrefix = {arXiv},
 </div>
 
 ## Funding
-This work has received funding by the ERC
-<img src="https://p7.hiclipart.com/preview/510/516/838/european-research-council-french-institute-for-research-in-computer-science-and-automation-university-of-paris-saclay-dan-zhang.jpg" width="400" height="400" alt="ERClogo">
+This work is supported by the ERC Advanced Grant INTERSTELLAR H2020/740120 (PI: Ferrara). LV has been supported by funding from the European Union’s Horizon 2020 research and innovation program under the Marie Sk lodowska-Curie Grant agreement No. 746119. 
+<img src="https://erc.europa.eu/sites/default/files/LOGO_ERC-FLAG_EU_.jpg" alt="ERClogo">
