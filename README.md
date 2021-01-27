@@ -1,6 +1,6 @@
 # General purpose and references
 
-In this repository you can find the Python code that will allow you to derive the gas density, gas metallicity, and deviations from the Kennicutt-Schmidt relation of a galaxy with known star formation rate surface density (Sigma_SFR) and [CII] and [OIII] surface brigthness. 
+In this <a href='https://github.com/lvallini/MCMC_galaxyline_analyzer/edit/main/'>repository</a> you can find the Python code that will allow you to derive the gas density, gas metallicity, and deviations from the Kennicutt-Schmidt relation of a galaxy with known star formation rate surface density (Sigma_SFR) and [CII] and [OIII] surface brigthness. 
 
 Details on the equations, and the rationale behind the implemention of this method are provided in the following papers:
  
