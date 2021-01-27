@@ -68,4 +68,4 @@ archivePrefix = {arXiv},
 
 ## Funding
 This work has received funding by the ERC
-![ERCimage](https://erc.europa.eu/sites/default/files/banner_news_logo.jpg)
+<img src="https://erc.europa.eu/sites/default/files/banner_news_logo.jpg" width="200" height="40" alt="ERClogo">
