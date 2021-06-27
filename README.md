@@ -59,7 +59,7 @@ archivePrefix = {arXiv},
        eprint = {2106.05279},
  primaryClass = {astro-ph.GA},
        adsurl = {https://ui.adsabs.harvard.edu/abs/2021arXiv210605279V},
-      adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+      adsnote = {Provided by the SAO/NASA Astrophysics Data System},
 }
 </span>
 </code></pre>
