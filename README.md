@@ -46,7 +46,7 @@ archivePrefix = {arXiv},
 
 
 <div class="row codice">
-<pre><code><span>@ARTICLE{2021arXiv210605279V,
+<pre><code><span>@ARTICLE{Vallini2021,
        author = {{Vallini}, L. and {Ferrara}, A. and {Pallottini}, A. and {Carniani}, S. and {Gallerani}, S.},
         title = "{High [OIII]/[CII] surface brightness ratios trace early starburst galaxies}",
       journal = {arXiv e-prints},
