@@ -47,7 +47,7 @@ archivePrefix = {arXiv},
 
 <div class="row codice">
 <pre><code><span>@ARTICLE{Vallini2021,
-       author = {{Vallini}, L. and {Ferrara}, A. and {Pallottini}, A. and {Carniani}, S. and {Gallerani}, S.},
+       author = <span>{</span>{Vallini}, L. and {Ferrara}, A. and {Pallottini}, A. and {Carniani}, S. and {Gallerani}, S.},
         title = "{High [OIII]/[CII] surface brightness ratios trace early starburst galaxies}",
       journal = {arXiv e-prints},
      keywords = {Astrophysics - Astrophysics of Galaxies},
@@ -60,9 +60,8 @@ archivePrefix = {arXiv},
  primaryClass = {astro-ph.GA},
        adsurl = {https://ui.adsabs.harvard.edu/abs/2021arXiv210605279V},
       adsnote = {Provided by the SAO/NASA Astrophysics Data System},
-}
-</span>
-</code></pre>
+}</span></code>
+</pre>
 </div>
 
 ## Funding
