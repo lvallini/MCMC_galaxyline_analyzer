@@ -4,7 +4,7 @@
 
 Details on the rationale behind the model implemention and on the equations are discussed in the following papers:
  
-  - Vallini et al. 2021, submitted 
+  - <a href="https://ui.adsabs.harvard.edu/abs/2021arXiv210605279V/abstract">Vallini et al. 2021</a>
   - <a href="https://ui.adsabs.harvard.edu/abs/2020MNRAS.495L..22V/abstract">Vallini et al. 2020</a> 
   - <a href="https://ui.adsabs.harvard.edu/abs/2019MNRAS.489....1F/abstract">Ferrara et al. 2019</a> 
 
