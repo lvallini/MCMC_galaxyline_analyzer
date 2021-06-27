@@ -46,23 +46,22 @@ archivePrefix = {arXiv},
 
 
 <div class="row codice">
-<pre><code><span>@ARTICLE{Vallini:2020,
-       author = <span>{</span> {Vallini}, L. and {Ferrara}, A. and {Pallottini}, A. and {Carniani}, S. and {Gallerani}, S.},
-        title = "{Star formation law in the epoch of reionization from [C II] and C III] lines}",
-      journal = {\mnras},
-     keywords = {photodissociation region (PDR), galaxies: high-redshift, galaxies: ISM, Astrophysics - Astrophysics of Galaxies},
-         year = 2020,
+<pre><code><span>@ARTICLE{2021arXiv210605279V,
+       author = {{Vallini}, L. and {Ferrara}, A. and {Pallottini}, A. and {Carniani}, S. and {Gallerani}, S.},
+        title = "{High [OIII]/[CII] surface brightness ratios trace early starburst galaxies}",
+      journal = {arXiv e-prints},
+     keywords = {Astrophysics - Astrophysics of Galaxies},
+         year = 2021,
         month = jun,
-       volume = {495},
-       number = {1},
-        pages = {L22-L26},
-          doi = {10.1093/mnrasl/slaa047},
+          eid = {arXiv:2106.05279},
+        pages = {arXiv:2106.05279},
 archivePrefix = {arXiv},
-       eprint = {2003.06443},
+       eprint = {2106.05279},
  primaryClass = {astro-ph.GA},
-       adsurl = {https://ui.adsabs.harvard.edu/abs/2020MNRAS.495L..22V},
+       adsurl = {https://ui.adsabs.harvard.edu/abs/2021arXiv210605279V},
       adsnote = {Provided by the SAO/NASA Astrophysics Data System}
-}</span>
+}
+</span>
 </code></pre>
 </div>
 
