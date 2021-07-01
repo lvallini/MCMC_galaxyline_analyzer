@@ -1,3 +1,4 @@
+from __future__ import print_function
 import numpy as np
 from emission_models import Delta,Sigma_CII158,Sigma_OIII88
 
