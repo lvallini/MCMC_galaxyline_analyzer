@@ -22,7 +22,7 @@ You can clone (or download) the entire repository and try the model with input d
 The code runs in Python 3.0. The modules **require** numpy, scipy, matplotlib, <a href="https://github.com/Morisset/PyNeb_devel">Pyneb</a>, 
 <a href='https://emcee.readthedocs.io/en/stable'>emcee</a>,  <a href="https://corner.readthedocs.io/en/latest/index.html">corner</a>.
 
-The codes runs in Python 2.7. Tested with emcee==3.0.2
+The codes can also run in Python 2.7. Tested with emcee==3.0.2
 
 ## Acknowledging this code in Scientific Publications
 
