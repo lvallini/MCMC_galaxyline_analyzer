@@ -1,5 +1,6 @@
 from __future__ import print_function
 import numpy as np
+import os
 from emission_models import Delta,Sigma_CII158,Sigma_OIII88
 
 import emcee
@@ -115,9 +116,14 @@ class MC_model:
             #
             # starting point for the walkers
             ,logn0=2.0, logZ0=-0.5, logk0 = 0.3
+                 
+            # backend fname
+            ,bkh_fname=None   
 
             ):
-
+        
+       # backend init
+       self.bkh_fname= None
 
        # priors for the MCMC
        self.lognMIN = None
@@ -147,7 +153,7 @@ class MC_model:
              )
 
        self.set_walkers(logn0=logn0, logZ0=logZ0, logk0 = logk0)
-
+       self.set_backend(bkh_fname=bkh_fname)
        self.set_mc_parameters(n_walkers=n_walkers,steps=steps,burn_in=burn_in)
 
     def check_consistency(self):
@@ -166,8 +172,14 @@ class MC_model:
         ok_data = isinstance(self.galaxy_data,galaxy_template)
         if not ok_data:
             print("galaxy data is not a galaxy_template() class")
+        
+        NoneType = type(None)
+        no_backend= isinstance(self.bkh_fname, NoneType)
+        ok_backend=not(no_backend)
+        if not ok_backend:
+            print("You need to provide the fname for the backend, use set_backend()")
 
-        return ok_priors and ok_init and ok_data
+        return ok_priors and ok_init and ok_data and ok_backend
 
     def run_model(self,verbose=True):
 
@@ -189,8 +201,14 @@ class MC_model:
         starting_point = [self.logn0, self.logZ0, self.logk0]
         pos            = [starting_point + 1e-5*np.random.randn(self.n_dim) for i in range(self.n_walkers)]
 
+        
+        # Set up the backend
+        backend = emcee.backends.HDFBackend(self.bkh_fname)
+        backend.reset(self.n_walkers, self.n_dim)
+        
+    
         # set the emcee
-        sampler        = emcee.EnsembleSampler(self.n_walkers, self.n_dim, self.lnprob, args=(y, yerr, par))
+        sampler        = emcee.EnsembleSampler(self.n_walkers, self.n_dim, self.lnprob, args=(y, yerr, par), backend=backend)
         # run the thing
         sampler.run_mcmc(pos, self.steps, progress=True)
         tau            = sampler.get_autocorr_time(quiet=True)
@@ -208,7 +226,14 @@ class MC_model:
           self.steps     = steps
         if burn_in is not None:
           self.burn_in   = burn_in
-
+    
+    def set_backend(self
+            ,bkh_fname=None):
+        # set the name for the bkh file
+        # if input is None, no change is done
+       if bkh_fname is not None:
+         self.bkh_fname = bkh_fname   #
+    
     def set_priors(self
             , lognMIN =  None, lognMAX =   None
             , logkMIN =  None, logkMAX =   None
@@ -307,5 +332,8 @@ class MC_model:
        print("  log n ",self.logn0)
        print("  log Z ",self.logZ0)
        print("  log k ",self.logk0)
+        
+       print("Backend fname")
+       print("  fname ",self.bkh_fname)
 
 
