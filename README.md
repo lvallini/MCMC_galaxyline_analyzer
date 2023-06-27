@@ -1,4 +1,3 @@
-<img src="glam-logo.png" alt="glam-logo" width ="500" height="auto" />
 
 # General purpose and references
 
@@ -74,3 +73,4 @@ This work is supported by the ERC Advanced Grant INTERSTELLAR H2020/740120 (PI: 
 Part of the work of LV has been supported by funding from the EU Horizon 2020 research and innovation program under the Marie Sklodowska-Curie Grant agreement No. 746119. 
 
 <img src="https://erc.europa.eu/sites/default/files/LOGO_ERC-FLAG_EU_.jpg" alt="ERClogo" width ="400" height="auto" />
+<img src="glam-logo.png" alt="glam-logo" width ="500" height="auto" />
